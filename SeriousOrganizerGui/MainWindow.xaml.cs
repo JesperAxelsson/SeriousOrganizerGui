@@ -18,7 +18,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 using System.Collections.Specialized;
-
+using System.Runtime.CompilerServices;
 
 namespace SeriousOrganizerGui
 {
@@ -39,7 +39,8 @@ namespace SeriousOrganizerGui
 
             _client.Connect();
             _turbo = new ItemProviderTurbo(_client);
-
+            _client.SendTextSearchChanged("");
+            _turbo.Update();
 
             _client.SendTest("Ello from the other side!");
 
@@ -77,48 +78,56 @@ namespace SeriousOrganizerGui
 
 
 
-    public class ItemProviderTurbo : IList<DirEntry>, IEnumerable<DirEntry>, INotifyCollectionChanged
+    public class ItemProviderTurbo : IList<DirEntry>, IList, INotifyCollectionChanged
     {
-        //private List<DirEntry> _store;
-        private readonly Client _client;
-
         public event NotifyCollectionChangedEventHandler CollectionChanged;
 
-        //public void NotifyPropertyChanged(string propName)
-        //{
-        //    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
-        //}
+        private readonly Client _client;
+        private LRUCache.LRUCache<int, DirEntry> _lruCache = new LRUCache.LRUCache<int, DirEntry>(200);
 
         public ItemProviderTurbo(Client client)
         {
-            //_store = new List<DirEntry>();
             _client = client;
         }
 
-        public DirEntry this[int index] { get => _client.GetDir(index); set => throw new NotImplementedException(); }
+        public DirEntry this[int index] { get { Console.WriteLine($"Get index: {index}"); return _lruCache.Get(index, k => _client.GetDir(k)); } set => throw new NotImplementedException(); }
+        object IList.this[int index] { get => this[index]; set => throw new NotImplementedException(); }
 
-        public int Count => _client.GetDirCount();
+        public int IndexOf(object value)
+        {
+            return -1;
+        }
+
+
+        public int Count { get; private set; }
 
         public bool IsReadOnly => false;
+        public bool IsFixedSize => true;
+        public object SyncRoot => new object();
+        public bool IsSynchronized => false;
 
-        private IEnumerable<DirEntry> DirEntries()
+
+        public bool Contains(object value)
         {
-            var count = Count;
-            for (var i = 0; i < count; i++)
-            {
-                Console.WriteLine("Loop: " + i);
-                yield return this[i];
-            }
+            return false;
+        }
+        public bool Contains(DirEntry item)
+        {
+            return false;
         }
 
         public void Update()
         {
+            Console.WriteLine("Update");
+            _lruCache.Clear();
+            Count = _client.GetDirCount();
             CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
         }
 
         public IEnumerator<DirEntry> GetEnumerator()
         {
-            return DirEntries().GetEnumerator();
+            return Enumerable.Empty<DirEntry>().GetEnumerator();
+            //return DirEntries().GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
@@ -128,10 +137,6 @@ namespace SeriousOrganizerGui
 
         #region " Skip these "
 
-        public bool Contains(DirEntry item)
-        {
-            throw new NotImplementedException();
-        }
 
         public void CopyTo(DirEntry[] array, int arrayIndex)
         {
@@ -168,73 +173,27 @@ namespace SeriousOrganizerGui
             throw new NotImplementedException();
         }
 
+        public int Add(object value)
+        {
+            throw new NotImplementedException();
+        }
+
+
+        public void Insert(int index, object value)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Remove(object value)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void CopyTo(Array array, int index)
+        {
+            throw new NotImplementedException();
+        }
+
         #endregion
-    }
-
-
-    public class ItemProvider<T> : IList<T>
-    {
-        private List<T> _store;
-
-        private ItemProvider()
-        {
-            _store = new List<T>();
-        }
-
-        public T this[int index] { get => _store[index]; set => throw new NotImplementedException(); }
-
-        public int Count => throw new NotImplementedException();
-
-        public bool IsReadOnly => throw new NotImplementedException();
-
-        public void Add(T item)
-        {
-            throw new NotImplementedException("Add() Not used!");
-        }
-
-        public void Clear()
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool Contains(T item)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void CopyTo(T[] array, int arrayIndex)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IEnumerator<T> GetEnumerator()
-        {
-            throw new NotImplementedException();
-        }
-
-        public int IndexOf(T item)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Insert(int index, T item)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool Remove(T item)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void RemoveAt(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            throw new NotImplementedException();
-        }
     }
 }

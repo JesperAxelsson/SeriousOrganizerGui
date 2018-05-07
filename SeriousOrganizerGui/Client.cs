@@ -45,12 +45,11 @@ namespace SeriousOrganizerGui
 
         public int GetDirCount()
         {
-            Console.WriteLine("Get dir count");
-
             _client.SendRequest(RequestType.CreateDirCountRequest());
 
             var response = _client.WaitResponseU32();
             //Console.WriteLine("Got back: " + response?.ToString() ?? "<null>");
+            Console.WriteLine($"Get dir count {response} {(int)response}");
             return (int)response;
         }
 
