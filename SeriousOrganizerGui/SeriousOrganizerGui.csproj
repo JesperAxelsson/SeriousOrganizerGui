@@ -82,7 +82,8 @@
     <Compile Include="Client.cs" />
     <Compile Include="Dto\Test.cs" />
     <Compile Include="Extensions.cs" />
-    <Compile Include="LRUCache.cs" />
+    <Compile Include="Data\ItemProviderTurbo.cs" />
+    <Compile Include="Data\LRUCache.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>

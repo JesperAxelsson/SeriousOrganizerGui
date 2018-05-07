@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
+using System.Collections.Generic;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 
 
-namespace LRUCache
+namespace SeriousOrganizerGui.Data
 {
     public class LRUCache<K, V>
     {
@@ -23,8 +21,8 @@ namespace LRUCache
         }
 
         private int capacity;
-        private Dictionary<K, LinkedListNode<LRUCacheItem>> cacheMap = new Dictionary<K, LinkedListNode<LRUCacheItem>>();
-        private LinkedList<LRUCacheItem> lruList = new LinkedList<LRUCacheItem>();
+        private Dictionary<K, LinkedListNode<LRUCacheItem>> _cacheMap = new Dictionary<K, LinkedListNode<LRUCacheItem>>();
+        private LinkedList<LRUCacheItem> _lruList = new LinkedList<LRUCacheItem>();
 
         public LRUCache(int capacity)
         {
@@ -35,7 +33,7 @@ namespace LRUCache
         public V Get(K key, Func<K, V> create)
         {
             LinkedListNode<LRUCacheItem> node;
-            if (!cacheMap.TryGetValue(key, out node))
+            if (!_cacheMap.TryGetValue(key, out node))
             {
                 V val = create(key);
                 Add(key, val);
@@ -43,8 +41,8 @@ namespace LRUCache
             }
 
             V value = node.Value.value;
-            lruList.Remove(node);
-            lruList.AddLast(node);
+            _lruList.Remove(node);
+            _lruList.AddLast(node);
             return value;
         }
 
@@ -57,32 +55,38 @@ namespace LRUCache
         [MethodImpl(MethodImplOptions.Synchronized)]
         public void Add(K key, V val)
         {
-            if (cacheMap.Count >= capacity)
+            if (_cacheMap.Count >= capacity)
             {
                 RemoveFirst();
             }
 
             LRUCacheItem cacheItem = new LRUCacheItem(key, val);
             LinkedListNode<LRUCacheItem> node = new LinkedListNode<LRUCacheItem>(cacheItem);
-            lruList.AddLast(node);
-            cacheMap.Add(key, node);
+            _lruList.AddLast(node);
+            _cacheMap.Add(key, node);
+        }
+
+        [MethodImpl(MethodImplOptions.Synchronized)]
+        public bool Contains(V value)
+        {
+            return _lruList.Any(node => node.value.Equals(value));
         }
 
         [MethodImpl(MethodImplOptions.Synchronized)]
         public void Clear()
         {
-            cacheMap.Clear();
-            lruList.Clear();
+            _cacheMap.Clear();
+            _lruList.Clear();
         }
 
         private void RemoveFirst()
         {
             // Remove from LRUPriority
-            LinkedListNode<LRUCacheItem> node = lruList.First;
-            lruList.RemoveFirst();
+            LinkedListNode<LRUCacheItem> node = _lruList.First;
+            _lruList.RemoveFirst();
 
             // Remove from cache
-            cacheMap.Remove(node.Value.key);
+            _cacheMap.Remove(node.Value.key);
         }
 
 

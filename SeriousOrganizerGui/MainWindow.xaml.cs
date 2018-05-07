@@ -19,53 +19,40 @@ using System.Windows.Shapes;
 
 using System.Collections.Specialized;
 using System.Runtime.CompilerServices;
+using SeriousOrganizerGui.Data;
 
 namespace SeriousOrganizerGui
 {
-
 
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
     {
-        private ObservableCollection<DirEntry> _dirs = new ObservableCollection<DirEntry>();
         private Client _client = new Client();
-        private ItemProviderTurbo _turbo;
+        private ItemProviderTurbo<DirEntry> _turbo;
+
+        private DirEntryProvider _dirEntryProvider;
 
         public MainWindow()
         {
             InitializeComponent();
 
             _client.Connect();
-            _turbo = new ItemProviderTurbo(_client);
-            _client.SendTextSearchChanged("");
+            _dirEntryProvider = new DirEntryProvider(_client);
+            _turbo = new ItemProviderTurbo<DirEntry>(_dirEntryProvider);
+            _client.SendTextSearchChanged(""); // Reset search text
             _turbo.Update();
 
             _client.SendTest("Ello from the other side!");
 
-
-            //dir_list.ItemsSource = _dirs;
             dir_list.ItemsSource = _turbo;
         }
 
         private void UpdateSearchList()
         {
-            var dirCount = _client.GetDirCount();
-
-
-            var st = Stopwatch.StartNew();
-            //_dirs.Clear();
-            //for (var i = 0; i < dirCount; i++)
-            //{
-            //    _dirs.Add(_client.GetDir(i));
-            //}
-
-            _turbo.Update();
-
-            st.Stop();
-            var ela = st.ElapsedMilliseconds;
-            Console.WriteLine($"Update in: {ela} ms");
+           _turbo.Update();
+            Console.WriteLine($"Update Search List");
         }
 
         private void txt_search_TextChanged(object sender, TextChangedEventArgs e)
@@ -76,124 +63,23 @@ namespace SeriousOrganizerGui
         }
     }
 
-
-
-    public class ItemProviderTurbo : IList<DirEntry>, IList, INotifyCollectionChanged
+    public class DirEntryProvider : IItemProvider<DirEntry>
     {
-        public event NotifyCollectionChangedEventHandler CollectionChanged;
-
         private readonly Client _client;
-        private LRUCache.LRUCache<int, DirEntry> _lruCache = new LRUCache.LRUCache<int, DirEntry>(200);
 
-        public ItemProviderTurbo(Client client)
+        public DirEntryProvider(Client client)
         {
             _client = client;
         }
 
-        public DirEntry this[int index] { get { Console.WriteLine($"Get index: {index}"); return _lruCache.Get(index, k => _client.GetDir(k)); } set => throw new NotImplementedException(); }
-        object IList.this[int index] { get => this[index]; set => throw new NotImplementedException(); }
-
-        public int IndexOf(object value)
+        public int GetCount()
         {
-            return -1;
+            return _client.GetDirCount();
         }
 
-
-        public int Count { get; private set; }
-
-        public bool IsReadOnly => false;
-        public bool IsFixedSize => true;
-        public object SyncRoot => new object();
-        public bool IsSynchronized => false;
-
-
-        public bool Contains(object value)
+        public DirEntry GetItem(int index)
         {
-            return false;
+            return _client.GetDir(index);
         }
-        public bool Contains(DirEntry item)
-        {
-            return false;
-        }
-
-        public void Update()
-        {
-            Console.WriteLine("Update");
-            _lruCache.Clear();
-            Count = _client.GetDirCount();
-            CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
-        }
-
-        public IEnumerator<DirEntry> GetEnumerator()
-        {
-            return Enumerable.Empty<DirEntry>().GetEnumerator();
-            //return DirEntries().GetEnumerator();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
-
-        #region " Skip these "
-
-
-        public void CopyTo(DirEntry[] array, int arrayIndex)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Add(DirEntry item)
-        {
-            throw new NotImplementedException("Add() Not used!");
-        }
-
-        public void Clear()
-        {
-            throw new NotImplementedException();
-        }
-
-        public int IndexOf(DirEntry item)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Insert(int index, DirEntry item)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool Remove(DirEntry item)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void RemoveAt(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        public int Add(object value)
-        {
-            throw new NotImplementedException();
-        }
-
-
-        public void Insert(int index, object value)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Remove(object value)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void CopyTo(Array array, int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        #endregion
     }
 }
