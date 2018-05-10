@@ -18,7 +18,9 @@
             <TextBox Name="txt_search" VerticalAlignment="Center" Width="200" Height="25" VerticalContentAlignment="Center" TextChanged="txt_search_TextChanged"/>
         </StackPanel>
         
-        <ListView Grid.Row="1" Margin="10" Name="dir_list" VirtualizingPanel.VirtualizationMode="Recycling" VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.CacheLength="10">
+        <ListView Grid.Row="1" Margin="10" Name="dir_list" VirtualizingPanel.VirtualizationMode="Recycling" VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.CacheLength="10" 
+                  ItemsSource="{Binding _turbo,Mode=OneWay}"
+                  SelectionChanged="dir_list_SelectionChanged">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="Name" Width="200"  DisplayMemberBinding="{Binding Name}"/>
@@ -28,7 +30,7 @@
             </ListView.View>
         </ListView>
 
-        <ListView Grid.Row="2" Margin="10" Name="file_list">
+        <ListView Grid.Row="2" Margin="10" Name="file_list" VirtualizingPanel.VirtualizationMode="Recycling" VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.CacheLength="10">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="Name" Width="200"  DisplayMemberBinding="{Binding Name}"/>
