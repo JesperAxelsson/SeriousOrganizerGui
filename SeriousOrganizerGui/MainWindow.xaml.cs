@@ -44,14 +44,14 @@ namespace SeriousOrganizerGui
             _client.SendTextSearchChanged(""); // Reset search text
             _turbo.Update();
 
-            _client.SendTest("Ello from the other side!");
-
             dir_list.ItemsSource = _turbo;
+            //var bin = new Binding("");
+            //bin.Mode = 
         }
 
         private void UpdateSearchList()
         {
-           _turbo.Update();
+            _turbo.Update();
             Console.WriteLine($"Update Search List");
         }
 
@@ -60,6 +60,16 @@ namespace SeriousOrganizerGui
             var text = ((TextBox)sender).Text;
             var new_length = _client.SendTextSearchChanged(text);
             UpdateSearchList();
+        }
+
+        private void dir_list_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var lv = sender as ListView;
+            Console.WriteLine("Selected row: " + lv.SelectedIndex);
+            var provider = new FileEntryProvider(_client, lv.SelectedIndex);
+            var foo = new ItemProviderTurbo<FileEntry>(provider);
+            foo.Update();
+            file_list.ItemsSource = foo;
         }
     }
 
@@ -80,6 +90,28 @@ namespace SeriousOrganizerGui
         public DirEntry GetItem(int index)
         {
             return _client.GetDir(index);
+        }
+    }
+
+    public class FileEntryProvider : IItemProvider<FileEntry>
+    {
+        private readonly Client _client;
+        private readonly int _dirIndex;
+
+        public FileEntryProvider(Client client, int dirIndex)
+        {
+            _client = client;
+            _dirIndex = dirIndex;
+        }
+
+        public int GetCount()
+        {
+            return _client.GetFileCount(_dirIndex);
+        }
+
+        public FileEntry GetItem(int index)
+        {
+            return _client.GetFile(_dirIndex, index);
         }
     }
 }

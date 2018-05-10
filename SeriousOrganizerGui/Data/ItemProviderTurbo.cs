@@ -59,9 +59,25 @@ namespace SeriousOrganizerGui.Data
             return false;
         }
 
-
-
         #region " Not implemented "
+
+        private class Enumarator
+        {
+            private int _count = 0;
+
+            public Enumarator(int count)
+            {
+                _count = count;
+            }
+
+            public IEnumerable GetIt()
+            {
+                for (var i = 0; i < _count; i++)
+                {
+                    yield return i;
+                }
+            }
+        }
 
         public IEnumerator<T> GetEnumerator()
         {
@@ -70,7 +86,9 @@ namespace SeriousOrganizerGui.Data
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return GetEnumerator();
+            var ena = new Enumarator(Count);
+            return ena.GetIt().GetEnumerator();
+            //return GetEnumerator();
         }
 
         public void CopyTo(T[] array, int arrayIndex)

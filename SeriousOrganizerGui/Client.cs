@@ -22,19 +22,14 @@ namespace SeriousOrganizerGui
             Console.WriteLine("Up and running!");
         }
 
-
-        static int id = 0;
-        public void SendTest(String text)
+        public void SendReloadRequest(Action doneCallback)
         {
-            Console.WriteLine("Hello there");
-
-            var obj = new Test2 { Id = text, Thing = id };
-            id++;
-
-            _client.SendRequest(RequestType.CreateTestRequest(), obj);
-
-            var response = _client.WaitResponse<Test2>();
-            Console.WriteLine("Got back: " + response?.ToString() ?? "<null>");
+            Task.Run(() =>
+            {
+                _client.SendRequest(RequestType.CreateChangeSearchText());
+                var resp = _client.WaitResponseU32();
+                doneCallback();
+            });
         }
 
         public int SendTextSearchChanged(String text)
@@ -48,18 +43,27 @@ namespace SeriousOrganizerGui
             _client.SendRequest(RequestType.CreateDirCountRequest());
 
             var response = _client.WaitResponseU32();
-            //Console.WriteLine("Got back: " + response?.ToString() ?? "<null>");
             Console.WriteLine($"Get dir count {response} {(int)response}");
             return (int)response;
         }
 
         public DirEntry GetDir(int ix)
         {
-            //Console.WriteLine("Sending dir request");
             _client.SendRequest(RequestType.CreateDirRequest(ix));
-
             var response = _client.WaitResponse<DirEntry>();
-            //Console.WriteLine("Got back: " + response?.ToString() ?? "<null>");
+            return response;
+        }
+
+        public int GetFileCount(int dirIx)
+        {
+            _client.SendRequest(RequestType.CreateDirFileCountRequest(dirIx));
+            return (int)_client.WaitResponseU32();
+        }
+
+        public FileEntry GetFile(int dirIx, int fileIx)
+        {
+            _client.SendRequest(RequestType.CreateFileRequest(dirIx, fileIx));
+            var response = _client.WaitResponse<FileEntry>();
             return response;
         }
 

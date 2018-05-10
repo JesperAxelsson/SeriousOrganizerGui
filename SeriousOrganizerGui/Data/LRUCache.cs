@@ -67,12 +67,6 @@ namespace SeriousOrganizerGui.Data
         }
 
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public bool Contains(V value)
-        {
-            return _lruList.Any(node => node.value.Equals(value));
-        }
-
-        [MethodImpl(MethodImplOptions.Synchronized)]
         public void Clear()
         {
             _cacheMap.Clear();
