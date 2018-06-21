@@ -73,6 +73,45 @@ namespace SeriousOrganizerGui
             foo.Update();
             file_list.ItemsSource = foo;
         }
+
+        private void file_list_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            var lv = sender as ListView;
+            if (lv.SelectedIndex < 0) return;
+
+            var path = ((FileEntry)lv.SelectedItem).Path;
+
+            Process.Start(new ProcessStartInfo(path) { CreateNoWindow = true });
+        }
+
+        private void MoreInfo(object sender, RoutedEventArgs e)
+        {
+            var lv = sender as ListView;
+            if (lv.SelectedIndex < 0) return;
+
+            var path = ((FileEntry)lv.SelectedItem).Path;
+
+            Process.Start(new ProcessStartInfo(path) { CreateNoWindow = true });
+        }
+
+        private void menuItem_CopyUsername_Click(object sender, RoutedEventArgs e)
+        {
+            var items1 = file_list.SelectedItems;
+            var items = file_list.SelectedItems.Cast<FileEntry>().Select(o => o.Path).ToList();
+            var count = items.LongCount();
+            //if (items.Count == 0)
+            //{
+            //    MessageBox.Show("No items selected");
+            //    return;
+            //}
+
+            //if (MessageBox.Show($"Are you sure you want to delete {items.Count} items?", "Delete confirmation") == MessageBoxResult.Cancel)
+            //    return; // Skip deleting
+
+            //foreach (var path in items.)
+            //    File.Delete()
+
+        }
     }
 
     public class DirEntryProvider : IItemProvider<DirEntry>
