@@ -51,6 +51,7 @@ namespace SeriousOrganizerGui
         {
             _client.SendRequest(RequestType.CreateDirRequest(ix));
             var response = _client.WaitResponse<DirEntry>();
+            response.Index = ix;
             return response;
         }
 
@@ -64,6 +65,7 @@ namespace SeriousOrganizerGui
         {
             _client.SendRequest(RequestType.CreateFileRequest(dirIx, fileIx));
             var response = _client.WaitResponse<FileEntry>();
+            response.Index = fileIx;
             return response;
         }
 

@@ -14,7 +14,18 @@ namespace SeriousOrganizerGui.Data
         T GetItem(int index);
     }
 
+    public interface Indexed
+    {
+        int Index { get; set; }
+    }
+
+    public class ItemIndex : Indexed
+    {
+        public int Index { get; set; }
+    }
+
     public class ItemProviderTurbo<T> : IList<T>, IList, INotifyCollectionChanged
+        where T : Indexed
     {
         public event NotifyCollectionChangedEventHandler CollectionChanged;
 
@@ -39,7 +50,7 @@ namespace SeriousOrganizerGui.Data
 
         public int IndexOf(object value)
         {
-            return -1;
+            return (value as Indexed).Index;
         }
 
         public int Count { get; private set; }
@@ -61,6 +72,8 @@ namespace SeriousOrganizerGui.Data
 
         #region " Not implemented "
 
+
+
         private class Enumarator
         {
             private int _count = 0;
@@ -74,7 +87,7 @@ namespace SeriousOrganizerGui.Data
             {
                 for (var i = 0; i < _count; i++)
                 {
-                    yield return i;
+                    yield return new ItemIndex { Index = i };
                 }
             }
         }

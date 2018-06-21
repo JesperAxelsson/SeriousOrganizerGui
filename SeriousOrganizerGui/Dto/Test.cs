@@ -1,4 +1,5 @@
 ﻿using MessagePack;
+using SeriousOrganizerGui.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -79,7 +80,7 @@ namespace SeriousOrganizerGui.Dto
     }
 
     [MessagePackObject, ToString]
-    public class DirEntry
+    public class DirEntry : Indexed
     {
         [Key(0)]
         public string Name { get; set; }
@@ -87,10 +88,13 @@ namespace SeriousOrganizerGui.Dto
         public string Path { get; set; }
         [Key(2)]
         public UInt64 Size { get; set; }
+
+        [IgnoreMember]
+        public int Index { get; set; }
     }
 
     [MessagePackObject, ToString]
-    public class FileEntry
+    public class FileEntry : Indexed
     {
         [Key(0)]
         public string Name { get; set; }
@@ -98,6 +102,9 @@ namespace SeriousOrganizerGui.Dto
         public string Path { get; set; }
         [Key(2)]
         public UInt64 Size { get; set; }
+
+        [IgnoreMember]
+        public int Index { get; set; }
     }
 
     [MessagePackObject, ToString]
