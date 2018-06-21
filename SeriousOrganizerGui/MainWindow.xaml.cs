@@ -65,6 +65,8 @@ namespace SeriousOrganizerGui
         private void dir_list_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var lv = sender as ListView;
+            if (lv.SelectedIndex < 0) return;
+
             Console.WriteLine("Selected row: " + lv.SelectedIndex);
             var provider = new FileEntryProvider(_client, lv.SelectedIndex);
             var foo = new ItemProviderTurbo<FileEntry>(provider);
