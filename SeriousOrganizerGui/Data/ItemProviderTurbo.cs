@@ -51,7 +51,7 @@ namespace SeriousOrganizerGui.Data
 
         public bool Contains(object value)
         {
-            return Contains(value);
+            return false;
         }
 
         public bool Contains(T item)
