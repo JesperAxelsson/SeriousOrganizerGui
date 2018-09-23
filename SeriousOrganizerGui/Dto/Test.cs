@@ -11,7 +11,6 @@ namespace SeriousOrganizerGui.Dto
 
     public static class RequestType
     {
-        private const byte Test = 0;
         private const byte DirRequest = 1;
         private const byte FileRequest = 2;
         private const byte AddPath = 3;
@@ -20,15 +19,9 @@ namespace SeriousOrganizerGui.Dto
         private const byte ChangeSearchText = 6;
         private const byte DirCount = 7;
         private const byte DirFileCount = 8;
+        private const byte DeletePath = 9;
 
-        public static byte[] CreateTestRequest()
-        {
-            var req = new List<byte>();
-            req.Add(Test);
-            return req.ToArray();
-        }
-
-        public static byte[] CreateReloadRequest()
+         public static byte[] CreateReloadRequest()
         {
             return new byte[] { ReloadStore };
         }
