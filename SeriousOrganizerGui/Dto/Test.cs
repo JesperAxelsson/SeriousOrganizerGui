@@ -9,6 +9,21 @@ using System.Threading.Tasks;
 namespace SeriousOrganizerGui.Dto
 {
 
+    public enum SortColumn : UInt32
+    {
+        Name = 0,
+        Path = 1,
+        Date = 2,
+        Size = 3,
+    }
+
+    public enum  SortOrder : UInt32
+    {
+        Asc = 0,
+        Desc = 1,
+    }
+
+
     public static class RequestType
     {
         private const byte DirRequest = 1;
@@ -20,8 +35,9 @@ namespace SeriousOrganizerGui.Dto
         private const byte DirCount = 7;
         private const byte DirFileCount = 8;
         private const byte DeletePath = 9;
+        private const byte Sort = 10;
 
-         public static byte[] CreateReloadRequest()
+        public static byte[] CreateReloadRequest()
         {
             return new byte[] { ReloadStore };
         }
@@ -61,6 +77,15 @@ namespace SeriousOrganizerGui.Dto
             req.Add(FileRequest);
             req.AddRange(BitConverter.GetBytes((UInt32)dirIx));
             req.AddRange(BitConverter.GetBytes((UInt32)fileIx));
+            return req.ToArray();
+        }
+
+        public static byte[] CreateSortRequest(SortColumn column, SortOrder order)
+        {
+            var req = new List<byte>();
+            req.Add(Sort);
+            req.AddRange(BitConverter.GetBytes((UInt32)column));
+            req.AddRange(BitConverter.GetBytes((UInt32)order));
             return req.ToArray();
         }
     }

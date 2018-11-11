@@ -11,7 +11,6 @@ using SeriousOrganizerGui.Dto;
 namespace SeriousOrganizerGui
 {
     public class Client : IDisposable
-
     {
         private NamedPipeClientStream _client;
         public void Connect()
@@ -69,6 +68,11 @@ namespace SeriousOrganizerGui
             return response;
         }
 
+        public int SendSortOrder(SortColumn column, SortOrder order)
+        {
+            _client.SendRequest(RequestType.CreateSortRequest(column, order));
+            return (int)_client.WaitResponseU32();
+        }
 
         public void Dispose()
         {

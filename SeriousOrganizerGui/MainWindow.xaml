@@ -20,10 +20,11 @@
         
         <ListView Grid.Row="1" Margin="10" Name="dir_list" VirtualizingPanel.VirtualizationMode="Recycling" VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.CacheLength="10" 
                   ItemsSource="{Binding _turbo,Mode=OneWay}"
-                  SelectionChanged="dir_list_SelectionChanged">
+                  SelectionChanged="dir_list_SelectionChanged"
+                    GridViewColumnHeader.Click="GridViewColumnHeaderClickedHandler">
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Header="Name" Width="200"  DisplayMemberBinding="{Binding Name}"/>
+                    <GridViewColumn Header="Name" Width="200"  DisplayMemberBinding="{Binding Name}" />
                     <GridViewColumn Header="Path" Width="200"  DisplayMemberBinding="{Binding Path}"/>
                     <GridViewColumn Header="Size" Width="Auto" DisplayMemberBinding="{Binding Size}"/>
                 </GridView>

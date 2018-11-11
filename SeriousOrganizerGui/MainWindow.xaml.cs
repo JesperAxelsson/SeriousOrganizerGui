@@ -20,6 +20,7 @@ using System.Windows.Shapes;
 using System.Collections.Specialized;
 using System.Runtime.CompilerServices;
 using SeriousOrganizerGui.Data;
+using System.ComponentModel;
 
 namespace SeriousOrganizerGui
 {
@@ -111,6 +112,43 @@ namespace SeriousOrganizerGui
             //foreach (var path in items.)
             //    File.Delete()
 
+        }
+
+        GridViewColumnHeader _lastHeaderClicked = null;
+        SortOrder _lastDirection = SortOrder.Asc;
+        void GridViewColumnHeaderClickedHandler(object sender, RoutedEventArgs e)
+        {
+            GridViewColumnHeader headerClicked = e.OriginalSource as GridViewColumnHeader;
+            SortOrder direction;
+
+            if (headerClicked != null)
+            {
+                if (headerClicked.Role != GridViewColumnHeaderRole.Padding)
+                {
+                    if (headerClicked != _lastHeaderClicked)
+                    {
+                        direction = SortOrder.Asc;
+                    }
+                    else
+                    {
+                        if (_lastDirection == SortOrder.Asc)
+                        {
+                            direction = SortOrder.Desc;
+                        }
+                        else
+                        {
+                            direction = SortOrder.Asc;
+                        }
+                    }
+
+                    string header = headerClicked.Column.Header as string;
+                    _client.SendSortOrder((SortColumn)Enum.Parse(typeof(SortColumn), header),  direction);
+                    _turbo.Update();
+
+                    _lastHeaderClicked = headerClicked;
+                    _lastDirection = direction;
+                }
+            }
         }
     }
 
