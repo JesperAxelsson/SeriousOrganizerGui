@@ -74,6 +74,26 @@ namespace SeriousOrganizerGui
             return (int)_client.WaitResponseU32();
         }
 
+
+        public int SendLabelAdd(String name)
+        {
+            _client.SendRequest(RequestType.CreateLabelAddRequest(), name);
+            return (int)_client.WaitResponseU32();
+        }
+
+        public int SendLabelRemove(int id)
+        {
+            _client.SendRequest(RequestType.CreateLabelRemoveRequest(id));
+            return (int)_client.WaitResponseU32();
+        }
+
+        public List<Label> SendLabelsGet()
+        {
+            _client.SendRequest(RequestType.CreateLabelsGetRequest());
+            var response= _client.WaitResponse<List<Label>>();
+            return new List<Label>( response );
+        }
+
         public void Dispose()
         {
             _client.Dispose();

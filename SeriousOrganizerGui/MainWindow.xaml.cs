@@ -46,6 +46,8 @@ namespace SeriousOrganizerGui
             _turbo.Update();
 
             dir_list.ItemsSource = _turbo;
+
+            
             //var bin = new Binding("");
             //bin.Mode = 
         }
@@ -149,6 +151,25 @@ namespace SeriousOrganizerGui
                     _lastDirection = direction;
                 }
             }
+        }
+
+
+        private void BtnAddLabel_Click(object sender, RoutedEventArgs e)
+        {
+            var name = txt_newlabel.Text;
+            if(string.IsNullOrWhiteSpace( name ) )
+            {
+                return;
+            }
+
+            _client.SendLabelAdd(name);
+
+        }
+
+        private void BtnGetLabels_Click(object sender, RoutedEventArgs e)
+        {
+            var lbls = _client.SendLabelsGet();
+            Console.WriteLine(lbls);
         }
     }
 

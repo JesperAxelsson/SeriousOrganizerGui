@@ -36,6 +36,9 @@ namespace SeriousOrganizerGui.Dto
         private const byte DirFileCount = 8;
         private const byte DeletePath = 9;
         private const byte Sort = 10;
+        private const byte LabelAdd = 11;
+        private const byte LabelRemove = 12;
+        private const byte LabelsGet = 13;
 
         public static byte[] CreateReloadRequest()
         {
@@ -88,6 +91,24 @@ namespace SeriousOrganizerGui.Dto
             req.AddRange(BitConverter.GetBytes((UInt32)order));
             return req.ToArray();
         }
+
+        public static byte[] CreateLabelAddRequest()
+        {
+            return new byte[] { LabelAdd };
+        }
+
+        public static byte[] CreateLabelRemoveRequest(int id)
+        {
+            var req = new List<byte>();
+            req.Add(LabelRemove);
+            req.AddRange(BitConverter.GetBytes((UInt32)id));
+            return req.ToArray();
+        }
+
+        public static byte[] CreateLabelsGetRequest()
+        {
+            return new byte[] { LabelsGet };
+        }
     }
 
     [MessagePackObject, ToString]
@@ -130,5 +151,14 @@ namespace SeriousOrganizerGui.Dto
     {
         [Key(0)]
         public UInt32 Count { get; set; }
+    }
+
+    [MessagePackObject, ToString]
+    public class Label
+    {
+        [Key(0)]
+        public int Id { get; set; }
+        [Key(1)]
+        public string Name{ get; set; }
     }
 }

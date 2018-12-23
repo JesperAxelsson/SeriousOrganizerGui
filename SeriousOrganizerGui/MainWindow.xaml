@@ -16,8 +16,14 @@
         <StackPanel Grid.Row="0" Orientation="Horizontal">
             <Label Content="Dude" Margin="10"/>
             <TextBox Name="txt_search" VerticalAlignment="Center" Width="200" Height="25" VerticalContentAlignment="Center" TextChanged="txt_search_TextChanged"/>
+
+            <TextBox Name="txt_newlabel" VerticalAlignment="Center" Width="200" Height="25" VerticalContentAlignment="Center" />
+            <Button Name="btnAddLabel" Click="BtnAddLabel_Click" Content="Add Label" />
+
+            <Button Name="btnGetLabels" Click="BtnGetLabels_Click" Content="Get Labels"/>
+
         </StackPanel>
-        
+
         <ListView Grid.Row="1" Margin="10" Name="dir_list" VirtualizingPanel.VirtualizationMode="Recycling" VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.CacheLength="10" 
                   ItemsSource="{Binding _turbo,Mode=OneWay}"
                   SelectionChanged="dir_list_SelectionChanged"
@@ -52,7 +58,7 @@
                     <Setter Property="ContextMenu" Value="{StaticResource ItemContextMenu}" />
                 </Style>
             </ListView.ItemContainerStyle>
-            
+
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="Name" Width="200"  DisplayMemberBinding="{Binding Name}"/>

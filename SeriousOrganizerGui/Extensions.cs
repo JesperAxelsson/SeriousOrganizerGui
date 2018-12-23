@@ -73,7 +73,15 @@ namespace SeriousOrganizerGui
         public static T WaitResponse<T>(this PipeStream stream)
         {
             var bin = stream.ReadMessage();
-            return MessagePackSerializer.Deserialize<T>(bin); ;
+            
+            return MessagePackSerializer.Deserialize<T>(bin); 
+        }
+
+        public static object WaitResponse(this PipeStream stream)
+        {
+            var bin = stream.ReadMessage();
+
+            return MessagePackSerializer.Typeless.Deserialize(bin);
         }
 
         public static UInt32 WaitResponseU32(this PipeStream stream)
