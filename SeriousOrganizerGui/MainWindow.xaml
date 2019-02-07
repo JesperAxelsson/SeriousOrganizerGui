@@ -5,7 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SeriousOrganizerGui"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="Serious Organizer" Height="450" Width="800">
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -32,7 +33,7 @@
                 <GridView>
                     <GridViewColumn Header="Name" Width="200"  DisplayMemberBinding="{Binding Name}" />
                     <GridViewColumn Header="Path" Width="200"  DisplayMemberBinding="{Binding Path}"/>
-                    <GridViewColumn Header="Size" Width="Auto" DisplayMemberBinding="{Binding Size}"/>
+                    <GridViewColumn Header="Size" Width="Auto" DisplayMemberBinding="{Binding Size, Converter={local:SizeToStringConverter}}"/>
                 </GridView>
             </ListView.View>
         </ListView>
@@ -57,13 +58,22 @@
                 <Style TargetType="{x:Type ListViewItem}">
                     <Setter Property="ContextMenu" Value="{StaticResource ItemContextMenu}" />
                 </Style>
+
             </ListView.ItemContainerStyle>
 
             <ListView.View>
+
                 <GridView>
-                    <GridViewColumn Header="Name" Width="200"  DisplayMemberBinding="{Binding Name}"/>
+                    <GridViewColumn Header="Name" Width="200">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock x:Name="Txt" Text="{Binding Name}"  Foreground="{Binding Name, Converter={local:NameToBrushConverter}}" />
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+
                     <GridViewColumn Header="Path" Width="200"  DisplayMemberBinding="{Binding Path}"/>
-                    <GridViewColumn Header="Size" Width="Auto" DisplayMemberBinding="{Binding Size}"/>
+                    <GridViewColumn Header="Size" Width="Auto" DisplayMemberBinding="{Binding Size, Converter={local:SizeToStringConverter}}"/>
                 </GridView>
             </ListView.View>
         </ListView>
