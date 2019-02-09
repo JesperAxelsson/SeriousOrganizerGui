@@ -80,6 +80,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Client.cs" />
+    <Compile Include="Converters.cs" />
     <Compile Include="Dto\Test.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Data\ItemProviderTurbo.cs" />
