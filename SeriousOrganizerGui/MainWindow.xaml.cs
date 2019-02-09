@@ -50,6 +50,7 @@ namespace SeriousOrganizerGui
             _turbo.Update();
 
             dir_list.ItemsSource = _turbo;
+            label_list.ItemsSource = _labelList;
             UpdateLabels();
 
             //var bin = new Binding("");
