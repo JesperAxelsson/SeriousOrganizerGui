@@ -122,10 +122,12 @@ namespace SeriousOrganizerGui.Dto
     public class DirEntry : Indexed
     {
         [Key(0)]
-        public string Name { get; set; }
+        public Int32 Id { get; set; }
         [Key(1)]
-        public string Path { get; set; }
+        public string Name { get; set; }
         [Key(2)]
+        public string Path { get; set; }
+        [Key(3)]
         public UInt64 Size { get; set; }
 
         [IgnoreMember]

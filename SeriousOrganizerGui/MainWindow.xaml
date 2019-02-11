@@ -20,21 +20,43 @@
         </Grid.RowDefinitions>
 
         <!-- Label list -->
-        <ListView Grid.Row="1" Grid.Column="0" Grid.RowSpan="2" Margin="10" Name="label_list">
-            <ListView.View>
-                <GridView>
-                    <GridViewColumn Header="Name" Width="150"  DisplayMemberBinding="{Binding Name}" />
-                </GridView>
-            </ListView.View>
-        </ListView>
+        <StackPanel Grid.Row="1" Grid.Column="0" Grid.RowSpan="2" Margin="10" Orientation="Vertical" VerticalAlignment="Stretch">
+            <ListView Name="label_list" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Header="Name" Width="150"  DisplayMemberBinding="{Binding Name}" />
+                    </GridView>
+                </ListView.View>
+            </ListView>
+            
+            <ToggleButton Name="button">
+                <ToggleButton.Template>
+                    <ControlTemplate TargetType="ToggleButton">
+                        <Border BorderBrush="Black" BorderThickness="1">
+                            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Height="20">Add Label</TextBlock>
+                        </Border>
+                    </ControlTemplate>
+                </ToggleButton.Template>
+            </ToggleButton>
 
+            <Popup IsOpen="{Binding IsChecked, ElementName=button}" StaysOpen="False" Placement="Center" >
+                <Border Background="LightYellow">
+                    <StackPanel>
+                        <Label Content="New Label" Margin="5"/>
+                        <TextBox Name="txt_newlabel" VerticalAlignment="Center" Width="200" Height="25" VerticalContentAlignment="Center" Margin="5"/>
+                        <StackPanel Orientation="Horizontal">
+                            <Button Content="Ok" Margin="5" Click="BtnAddLabel_Click"/>
+                            <Button Content="Cancel" Margin="5"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+            </Popup>
+        </StackPanel>
+      
         <!-- Search box -->
         <StackPanel Grid.Row="0" Grid.Column="1" Margin="10" Orientation="Horizontal" >
             <Label Content="Search" Margin="10"/>
             <TextBox Name="txt_search" VerticalAlignment="Center" Width="200" Height="25" VerticalContentAlignment="Center" TextChanged="txt_search_TextChanged"/>
-
-            <TextBox Name="txt_newlabel" VerticalAlignment="Center" Width="200" Height="25" VerticalContentAlignment="Center" />
-            <Button Name="btnAddLabel" Click="BtnAddLabel_Click" Content="Add Label" />
 
             <Button Name="btnGetLabels" Click="BtnGetLabels_Click" Content="Get Labels"/>
 
