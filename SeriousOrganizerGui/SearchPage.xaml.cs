@@ -35,7 +35,6 @@ namespace SeriousOrganizerGui
         {
             InitializeComponent();
 
-            DataClient.Client.Connect();
             _dirEntryProvider = new DirEntryProvider(DataClient.Client);
             _turbo = new ItemProviderTurbo<DirEntry>(_dirEntryProvider);
             DataClient.Client.SendTextSearchChanged(""); // Reset search text

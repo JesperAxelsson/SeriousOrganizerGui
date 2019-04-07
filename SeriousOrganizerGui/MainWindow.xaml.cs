@@ -26,7 +26,7 @@ using System.Windows.Markup;
 
 namespace SeriousOrganizerGui
 {
-   
+
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
@@ -35,10 +35,9 @@ namespace SeriousOrganizerGui
 
         public MainWindow()
         {
-            InitializeComponent();
-
             DataClient.Connect();
 
+            InitializeComponent();
 
             //_client.Connect();
             //_dirEntryProvider = new DirEntryProvider(_client);
@@ -54,6 +53,6 @@ namespace SeriousOrganizerGui
             //bin.Mode = 
         }
 
-     
+
     }
 }
