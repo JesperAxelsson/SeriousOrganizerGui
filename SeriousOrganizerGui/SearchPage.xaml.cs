@@ -26,7 +26,6 @@ namespace SeriousOrganizerGui
     public partial class SearchPage : UserControl
     {
 
-        private Client _client = new Client();
         private ItemProviderTurbo<DirEntry> _turbo;
 
         private DirEntryProvider _dirEntryProvider;
@@ -36,11 +35,10 @@ namespace SeriousOrganizerGui
         {
             InitializeComponent();
 
-
-            _client.Connect();
-            _dirEntryProvider = new DirEntryProvider(_client);
+            DataClient.Client.Connect();
+            _dirEntryProvider = new DirEntryProvider(DataClient.Client);
             _turbo = new ItemProviderTurbo<DirEntry>(_dirEntryProvider);
-            _client.SendTextSearchChanged(""); // Reset search text
+            DataClient.Client.SendTextSearchChanged(""); // Reset search text
             _turbo.Update();
 
             dir_list.ItemsSource = _turbo;
@@ -57,7 +55,7 @@ namespace SeriousOrganizerGui
         private void txt_search_TextChanged(object sender, TextChangedEventArgs e)
         {
             var text = ((TextBox)sender).Text;
-            var new_length = _client.SendTextSearchChanged(text);
+            var new_length = DataClient.Client.SendTextSearchChanged(text);
             UpdateSearchList();
         }
 
@@ -67,7 +65,7 @@ namespace SeriousOrganizerGui
             if (lv.SelectedIndex < 0) return;
 
             Console.WriteLine("Selected row: " + lv.SelectedIndex);
-            var provider = new FileEntryProvider(_client, lv.SelectedIndex);
+            var provider = new FileEntryProvider(DataClient.Client, lv.SelectedIndex);
             var foo = new ItemProviderTurbo<FileEntry>(provider);
             foo.Update();
             file_list.ItemsSource = foo;
@@ -140,7 +138,7 @@ namespace SeriousOrganizerGui
                     }
 
                     string header = headerClicked.Column.Header as string;
-                    _client.SendSortOrder((SortColumn)Enum.Parse(typeof(SortColumn), header), direction);
+                    DataClient.Client.SendSortOrder((SortColumn)Enum.Parse(typeof(SortColumn), header), direction);
                     _turbo.Update();
 
                     _lastHeaderClicked = headerClicked;
@@ -158,7 +156,7 @@ namespace SeriousOrganizerGui
                 return;
             }
 
-            _client.SendLabelAdd(name);
+            DataClient.Client.SendLabelAdd(name);
             UpdateLabels();
 
         }
@@ -170,7 +168,7 @@ namespace SeriousOrganizerGui
 
         private void UpdateLabels()
         {
-            var lbls = _client.SendLabelsGet();
+            var lbls = DataClient.GetLabels();
 
             _labelList.Clear();
             lbls.ForEach(l => _labelList.Add(l));
