@@ -57,7 +57,6 @@
             <Label Content="Search" Margin="10"/>
             <TextBox Name="txt_search" VerticalAlignment="Center" Width="200" Height="25" VerticalContentAlignment="Center" TextChanged="txt_search_TextChanged"/>
 
-            <Button Name="btnGetLabels" Click="BtnGetLabels_Click" Content="Get Labels"/>
 
             <Button Click="BtnOpenLabelSelect" >Open dialog</Button>
 

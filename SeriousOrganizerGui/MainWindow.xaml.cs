@@ -32,9 +32,13 @@ namespace SeriousOrganizerGui
     /// </summary>
     public partial class MainWindow : Window
     {
+
         public MainWindow()
         {
             InitializeComponent();
+
+            DataClient.Connect();
+
 
             //_client.Connect();
             //_dirEntryProvider = new DirEntryProvider(_client);

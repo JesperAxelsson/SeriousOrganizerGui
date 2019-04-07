@@ -29,7 +29,7 @@ namespace SeriousOrganizerGui
         private ItemProviderTurbo<DirEntry> _turbo;
 
         private DirEntryProvider _dirEntryProvider;
-        private ObservableCollection<Dto.Label> _labelList = new ObservableCollection<Dto.Label>();
+
 
         public SearchPage()
         {
@@ -42,8 +42,7 @@ namespace SeriousOrganizerGui
             _turbo.Update();
 
             dir_list.ItemsSource = _turbo;
-            label_list.ItemsSource = _labelList;
-            UpdateLabels();
+            label_list.ItemsSource = DataClient.Label.Get();
         }
 
         private void UpdateSearchList()
@@ -156,22 +155,7 @@ namespace SeriousOrganizerGui
                 return;
             }
 
-            DataClient.Client.SendLabelAdd(name);
-            UpdateLabels();
-
-        }
-
-        private void BtnGetLabels_Click(object sender, RoutedEventArgs e)
-        {
-            UpdateLabels();
-        }
-
-        private void UpdateLabels()
-        {
-            var lbls = DataClient.GetLabels();
-
-            _labelList.Clear();
-            lbls.ForEach(l => _labelList.Add(l));
+            DataClient.Label.Add(name);
         }
 
         private void BtnOpenLabelSelect(object sender, RoutedEventArgs e)
