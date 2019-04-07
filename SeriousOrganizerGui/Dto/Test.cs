@@ -17,7 +17,7 @@ namespace SeriousOrganizerGui.Dto
         Size = 3,
     }
 
-    public enum  SortOrder : UInt32
+    public enum SortOrder : UInt32
     {
         Asc = 0,
         Desc = 1,
@@ -39,6 +39,7 @@ namespace SeriousOrganizerGui.Dto
         private const byte LabelAdd = 11;
         private const byte LabelRemove = 12;
         private const byte LabelsGet = 13;
+        private const byte LabelsGetForEntry = 14;
 
         public static byte[] CreateReloadRequest()
         {
@@ -109,6 +110,14 @@ namespace SeriousOrganizerGui.Dto
         {
             return new byte[] { LabelsGet };
         }
+
+        public static byte[] CreateLabelsGetForEntryRequest(int id)
+        {
+            var req = new List<byte>();
+            req.Add(LabelsGetForEntry);
+            req.AddRange(BitConverter.GetBytes((UInt32)id));
+            return req.ToArray();
+        }
     }
 
     [MessagePackObject, ToString]
@@ -161,6 +170,6 @@ namespace SeriousOrganizerGui.Dto
         [Key(0)]
         public int Id { get; set; }
         [Key(1)]
-        public string Name{ get; set; }
+        public string Name { get; set; }
     }
 }

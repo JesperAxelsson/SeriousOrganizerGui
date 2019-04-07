@@ -94,6 +94,13 @@ namespace SeriousOrganizerGui
             return new List<Label>( response );
         }
 
+        public List<int> SendLabelsGetForEntry(int dirId)
+        {
+            _client.SendRequest(RequestType.CreateLabelsGetForEntryRequest(dirId));
+            var response = _client.WaitResponse<List<int>>();
+            return new List<int>(response);
+        }
+
         public void Dispose()
         {
             _client.Dispose();

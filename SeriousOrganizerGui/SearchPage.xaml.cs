@@ -161,7 +161,7 @@ namespace SeriousOrganizerGui
         {
             List<Indexed> entriesSelected = dir_list.SelectedItems.Cast<Indexed>().ToList();
 
-            var select = new LabelSelect();
+            var select = new LabelSelect(entriesSelected);
             select.ShowInTaskbar = false;
             select.Owner = (Window)((dynamic)this.Parent).Parent;
             select.ShowDialog();

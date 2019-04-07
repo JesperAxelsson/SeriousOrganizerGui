@@ -20,13 +20,28 @@ namespace SeriousOrganizerGui
     /// </summary>
     public partial class LabelSelect : Window
     {
-        public LabelSelect()
+        protected LabelSelect()
         {
             InitializeComponent();
 
             LabelList.ItemsSource = DataClient.Label.Get();
         }
-         
+
+        public LabelSelect(List<Indexed> entries)
+        {
+            InitializeComponent();
+
+            LabelList.ItemsSource = DataClient.Label.Get();
+
+            var list = new List<List<int>>();
+
+            foreach (var entry in entries)
+            {
+                list.Add(DataClient.Label.GetForEntry(entry.Index));
+            }
+        }
+
+
         private void Cancel_Button_Click(object sender, RoutedEventArgs e)
         {
             this.Close();

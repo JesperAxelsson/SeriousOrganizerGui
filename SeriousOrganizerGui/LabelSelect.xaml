@@ -22,6 +22,7 @@
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="Name" Width="150"  DisplayMemberBinding="{Binding Name}" />
+
                 </GridView>
             </ListView.View>
         </ListView>

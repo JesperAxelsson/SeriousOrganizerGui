@@ -44,6 +44,7 @@ namespace SeriousOrganizerGui.Data
                 Update();
             }
 
+
             private BetterObservable<Label> _labelList = new BetterObservable<Label>();
 
             public BetterObservable<Label> Get()
@@ -66,6 +67,12 @@ namespace SeriousOrganizerGui.Data
                 _client.SendLabelRemove(id);
                 Update();
             }
+
+            public List<int> GetForEntry(int id)
+            {
+                return _client.SendLabelsGetForEntry(id);
+            }
+
         }
     }
 }
