@@ -23,8 +23,15 @@ namespace SeriousOrganizerGui
     /// <summary>
     /// Interaction logic for SearchPage.xaml
     /// </summary>
-    public partial class SearchPage : Page
+    public partial class SearchPage : UserControl
     {
+
+        private Client _client = new Client();
+        private ItemProviderTurbo<DirEntry> _turbo;
+
+        private DirEntryProvider _dirEntryProvider;
+        private ObservableCollection<Dto.Label> _labelList = new ObservableCollection<Dto.Label>();
+
         public SearchPage()
         {
             InitializeComponent();
@@ -40,13 +47,6 @@ namespace SeriousOrganizerGui
             label_list.ItemsSource = _labelList;
             UpdateLabels();
         }
-
-        private Client _client = new Client();
-        private ItemProviderTurbo<DirEntry> _turbo;
-
-        private DirEntryProvider _dirEntryProvider;
-        private ObservableCollection<Dto.Label> _labelList = new ObservableCollection<Dto.Label>();
-
 
         private void UpdateSearchList()
         {
@@ -174,6 +174,16 @@ namespace SeriousOrganizerGui
 
             _labelList.Clear();
             lbls.ForEach(l => _labelList.Add(l));
+        }
+
+        private void BtnOpenLabelSelect(object sender, RoutedEventArgs e)
+        {
+            List<Indexed> entriesSelected = dir_list.SelectedItems.Cast<Indexed>().ToList();
+
+            var select = new LabelSelect();
+            select.ShowInTaskbar = false;
+            select.Owner = (Window)((dynamic)this.Parent).Parent;
+            select.ShowDialog();
         }
     }
 }
