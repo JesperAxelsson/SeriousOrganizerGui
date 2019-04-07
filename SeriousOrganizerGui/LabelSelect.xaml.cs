@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SeriousOrganizerGui.Data;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,8 +23,10 @@ namespace SeriousOrganizerGui
         public LabelSelect()
         {
             InitializeComponent();
-        }
 
+            LabelList.ItemsSource = DataClient.Label.Get();
+        }
+         
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
