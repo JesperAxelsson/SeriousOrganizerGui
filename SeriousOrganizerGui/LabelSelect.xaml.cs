@@ -27,7 +27,12 @@ namespace SeriousOrganizerGui
             LabelList.ItemsSource = DataClient.Label.Get();
         }
          
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void Cancel_Button_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
+
+        private void Ok_Button_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
         }

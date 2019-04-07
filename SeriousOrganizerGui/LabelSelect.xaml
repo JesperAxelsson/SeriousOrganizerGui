@@ -23,8 +23,8 @@
         </ListView>
         
         <StackPanel Grid.Row="2" Orientation="Horizontal">
-            <Button Width="200" Height="40" Click="Button_Click" Margin="5">Ok</Button>
-            <Button Width="200" Height="40" Click="Button_Click" Margin="5">Cancel</Button>
+            <Button Width="200" Height="40" Click="Ok_Button_Click" Margin="5">Ok</Button>
+            <Button Width="200" Height="40" Click="Cancel_Button_Click" Margin="5">Cancel</Button>
         </StackPanel>
     </Grid>
 </Window>
