@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MessagePack;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -14,14 +15,44 @@ namespace SeriousOrganizerGui.Data
         T GetItem(int index);
     }
 
-    public interface Indexed
+    public abstract class Indexed  //: IEqualityComparer<Indexed>, IEqualityComparer
     {
-        int Index { get; set; }
+
+        [IgnoreMember]
+
+        public int Index { get; set; }
+
+        //public bool Equals(Indexed x, Indexed y)
+        //{
+        //    return x.Index == y.Index;
+        //}
+
+        //public new bool Equals(object x, object y)
+        //{
+        //    return (Indexed)x.Equals((Indexed)y);
+        //}
+
+        //public int GetHashCode(Indexed obj)
+        //{
+        //    return obj.Index * 2147483647;
+        //}
+
+        public override int GetHashCode()
+        {
+            return Index * 2147483647;
+        }
+
+        public override bool Equals(Object obj)
+        {
+            if (obj == null || !(obj is Indexed))
+                return false;
+            else
+                return Index == ((Indexed)obj).Index;
+        }
     }
 
     public class ItemIndex : Indexed
     {
-        public int Index { get; set; }
     }
 
     public class ItemProviderTurbo<T> : IList<T>, IList, INotifyCollectionChanged

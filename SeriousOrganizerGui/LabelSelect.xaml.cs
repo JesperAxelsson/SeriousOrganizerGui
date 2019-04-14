@@ -1,5 +1,6 @@
 ﻿using SeriousOrganizerGui.Data;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,6 +21,7 @@ namespace SeriousOrganizerGui
     /// </summary>
     public partial class LabelSelect : Window
     {
+        private List<Indexed> _entries;
         protected LabelSelect()
         {
             InitializeComponent();
@@ -31,14 +33,17 @@ namespace SeriousOrganizerGui
         {
             InitializeComponent();
 
+            _entries = entries;
+
             LabelList.ItemsSource = DataClient.Label.Get();
 
             var list = new List<List<int>>();
 
-            foreach (var entry in entries)
-            {
-                list.Add(DataClient.Label.GetForEntry(entry.Index));
-            }
+            //foreach (var entry in entries)
+            //{
+            //    var id = DataClient.Client.GetDir(entry.Index).Id;
+            //    list.Add(DataClient.Label.GetForEntry(id));
+            //}
         }
 
 
@@ -49,7 +54,14 @@ namespace SeriousOrganizerGui
 
         private void Ok_Button_Click(object sender, RoutedEventArgs e)
         {
-            this.Close();
+            if (LabelList.SelectedItems.Count > 0)
+            {
+                var selected = LabelList.SelectedItems.Cast<Dto.Label>().Select(x => x.Id);
+                var entryIds = _entries.Select(ix => DataClient.Client.GetDir(ix.Index).Id);
+                DataClient.Label.AddLabelsToEntry(entryIds, selected);
+
+                this.Close();
+            }
         }
     }
 }

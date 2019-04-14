@@ -90,8 +90,8 @@ namespace SeriousOrganizerGui
         public List<Label> SendLabelsGet()
         {
             _client.SendRequest(RequestType.CreateLabelsGetRequest());
-            var response= _client.WaitResponse<List<Label>>();
-            return new List<Label>( response );
+            var response = _client.WaitResponse<List<Label>>();
+            return new List<Label>(response);
         }
 
         public List<int> SendLabelsGetForEntry(int dirId)
@@ -99,6 +99,12 @@ namespace SeriousOrganizerGui
             _client.SendRequest(RequestType.CreateLabelsGetForEntryRequest(dirId));
             var response = _client.WaitResponse<List<int>>();
             return new List<int>(response);
+        }
+
+        public int SendAddLabelsToDir(IEnumerable<int> dirId, IEnumerable<int> labelIds)
+        {
+            _client.SendRequest(RequestType.CreateAddLabelsToDir(dirId, labelIds));
+            return (int)_client.WaitResponseU32();
         }
 
         public void Dispose()

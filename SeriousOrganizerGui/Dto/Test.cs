@@ -40,6 +40,8 @@ namespace SeriousOrganizerGui.Dto
         private const byte LabelRemove = 12;
         private const byte LabelsGet = 13;
         private const byte LabelsGetForEntry = 14;
+        private const byte AddLabelsToDir = 15;
+
 
         public static byte[] CreateReloadRequest()
         {
@@ -118,6 +120,24 @@ namespace SeriousOrganizerGui.Dto
             req.AddRange(BitConverter.GetBytes((UInt32)id));
             return req.ToArray();
         }
+
+        public static byte[] CreateAddLabelsToDir(IEnumerable<int> ids, IEnumerable<int> labelIds)
+        {
+            var req = new List<byte>();
+            req.Add(AddLabelsToDir);
+            AddList(req, ids);
+            AddList(req, labelIds);
+            return req.ToArray();
+        }
+
+        public static void AddList(List<byte> request, IEnumerable<int> data)
+        {
+            request.AddRange(BitConverter.GetBytes((UInt32)data.Count()));
+            foreach (var elem in data)
+            {
+                request.AddRange(BitConverter.GetBytes((UInt32)elem));
+            }
+        }
     }
 
     [MessagePackObject, ToString]
@@ -139,8 +159,8 @@ namespace SeriousOrganizerGui.Dto
         [Key(3)]
         public UInt64 Size { get; set; }
 
-        [IgnoreMember]
-        public int Index { get; set; }
+        //[IgnoreMember]
+        //public int Index { get; set; }
     }
 
     [MessagePackObject, ToString]
@@ -153,8 +173,8 @@ namespace SeriousOrganizerGui.Dto
         [Key(2)]
         public UInt64 Size { get; set; }
 
-        [IgnoreMember]
-        public int Index { get; set; }
+        //[IgnoreMember]
+        //public int Index { get; set; }
     }
 
     [MessagePackObject, ToString]

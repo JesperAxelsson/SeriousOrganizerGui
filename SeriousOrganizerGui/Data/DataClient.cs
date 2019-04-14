@@ -73,6 +73,11 @@ namespace SeriousOrganizerGui.Data
                 return _client.SendLabelsGetForEntry(id);
             }
 
+            public void AddLabelsToEntry(IEnumerable< int >entryIds, IEnumerable<int> labelIds)
+            {
+                _client.SendAddLabelsToDir(entryIds, labelIds);
+            }
+
         }
     }
 }

@@ -159,7 +159,17 @@ namespace SeriousOrganizerGui
 
         private void BtnOpenLabelSelect(object sender, RoutedEventArgs e)
         {
-            List<Indexed> entriesSelected = dir_list.SelectedItems.Cast<Indexed>().ToList();
+            List<Indexed> entriesSelected = dir_list.SelectedItems.Cast<Indexed>().Distinct( ).ToList();
+
+            var indexes = new HashSet<int>();
+            foreach  (var ind in entriesSelected)
+            {
+                if (!indexes.Add(ind.Index))
+                {
+                    Debugger.Break();
+                }
+            }
+            
 
             var select = new LabelSelect(entriesSelected);
             select.ShowInTaskbar = false;
