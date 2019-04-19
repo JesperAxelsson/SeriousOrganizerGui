@@ -13,28 +13,6 @@ namespace SeriousOrganizerGui
 {
     public static class Extensions
     {
-        //public static byte[] ToBson<T>(this T value)
-        //{
-        //    using (MemoryStream ms = new MemoryStream())
-        //    using (BsonDataWriter datawriter = new BsonDataWriter(ms))
-        //    {
-        //        JsonSerializer serializer = new JsonSerializer();
-        //        serializer.Serialize(datawriter, value);
-        //        return ms.ToArray();
-        //    }
-        //}
-
-        //public static T FromBson<T>(this byte[] data)
-        //{
-        //    using (MemoryStream ms = new MemoryStream(data))
-        //    using (BsonDataReader reader = new BsonDataReader(ms))
-        //    {
-        //        JsonSerializer serializer = new JsonSerializer();
-        //        return serializer.Deserialize<T>(reader);
-        //    }
-        //}
-
-
         /// <summary>
         /// Reads a message from the pipe.
         /// </summary>
@@ -52,12 +30,6 @@ namespace SeriousOrganizerGui
 
             memoryStream.Write(buffer, 0, stream.Read(buffer, 0, size));
 
-            //do
-            //{
-            //    memoryStream.Write(buffer, 0, stream.Read(buffer, 0, buffer.Length - 1));
-
-            //} while (stream.IsMessageComplete == false);
-
             return memoryStream.ToArray();
         }
 
@@ -73,13 +45,8 @@ namespace SeriousOrganizerGui
 
         public static void SendRequest(this PipeStream stream, byte[] req)
         {
-            var bytes = new List<byte>();
-            bytes.AddRange(BitConverter.GetBytes(req.Length));
-            bytes.AddRange(req);
-            stream.Write(bytes.ToArray(), 0, bytes.Count);
-
-            //stream.Write(BitConverter.GetBytes(req.Length), 0, 4);
-            //stream.Write(req, 0, req.Length);
+            stream.Write(BitConverter.GetBytes(req.Length), 0, 4);
+            stream.Write(req, 0, req.Length);
             stream.Flush();
         }
 
