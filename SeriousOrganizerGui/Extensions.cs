@@ -46,11 +46,17 @@ namespace SeriousOrganizerGui
 
             byte[] buffer = new byte[stream.InBufferSize];
 
-            do
-            {
-                memoryStream.Write(buffer, 0, stream.Read(buffer, 0, buffer.Length - 1));
+            byte[] bufferSize = new byte[4];
+            stream.Read(bufferSize, 0, 4);
+            var size = BitConverter.ToInt32(bufferSize, 0);
 
-            } while (stream.IsMessageComplete == false);
+            memoryStream.Write(buffer, 0, stream.Read(buffer, 0, size));
+
+            //do
+            //{
+            //    memoryStream.Write(buffer, 0, stream.Read(buffer, 0, buffer.Length - 1));
+
+            //} while (stream.IsMessageComplete == false);
 
             return memoryStream.ToArray();
         }
@@ -60,21 +66,28 @@ namespace SeriousOrganizerGui
             var bytes = new List<byte>();
             bytes.AddRange(req);
             bytes.AddRange(MessagePackSerializer.Serialize(obj));
+            stream.Write(BitConverter.GetBytes(bytes.Count), 0, 4);
             stream.Write(bytes.ToArray(), 0, bytes.Count);
             stream.Flush();
         }
 
         public static void SendRequest(this PipeStream stream, byte[] req)
         {
-            stream.Write(req, 0, req.Length);
+            var bytes = new List<byte>();
+            bytes.AddRange(BitConverter.GetBytes(req.Length));
+            bytes.AddRange(req);
+            stream.Write(bytes.ToArray(), 0, bytes.Count);
+
+            //stream.Write(BitConverter.GetBytes(req.Length), 0, 4);
+            //stream.Write(req, 0, req.Length);
             stream.Flush();
         }
 
         public static T WaitResponse<T>(this PipeStream stream)
         {
             var bin = stream.ReadMessage();
-            
-            return MessagePackSerializer.Deserialize<T>(bin); 
+
+            return MessagePackSerializer.Deserialize<T>(bin);
         }
 
         public static object WaitResponse(this PipeStream stream)

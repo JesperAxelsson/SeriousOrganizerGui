@@ -17,7 +17,7 @@ namespace SeriousOrganizerGui
         {
             _client = new NamedPipeClientStream(".", "dude", direction: PipeDirection.InOut);
             _client.Connect();
-            _client.ReadMode = PipeTransmissionMode.Message;
+            _client.ReadMode = PipeTransmissionMode.Byte;
             Console.WriteLine("Up and running!");
         }
 
