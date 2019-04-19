@@ -4,6 +4,7 @@ using SeriousOrganizerGui.Dto;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
@@ -20,6 +21,44 @@ using System.Windows.Shapes;
 
 namespace SeriousOrganizerGui
 {
+    public enum TriState
+    {
+        Neutral = 0,
+        Selected = 1,
+        UnSelected = 2,
+    }
+
+    public class TriStateToggle : INotifyPropertyChanged
+    {
+
+
+        private Dto.Label _inner;
+        private TriState _state;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public TriStateToggle(Dto.Label inner)
+        {
+            _state = TriState.Neutral;
+            _inner = inner;
+        }
+
+        public static TriStateToggle Create(Dto.Label inner) => new TriStateToggle(inner);
+
+        public TriState State
+        {
+            get => _state;
+            set
+            {
+                _state = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("State"));
+            }
+        }
+
+
+        public string Name { get => _inner.Name; }
+    }
+
     /// <summary>
     /// Interaction logic for SearchPage.xaml
     /// </summary>
@@ -41,8 +80,10 @@ namespace SeriousOrganizerGui
             _turbo.Update();
 
             dir_list.ItemsSource = _turbo;
-            label_list.ItemsSource = DataClient.Label.Get();
+            label_list.ItemsSource = DataClient.Label.Get().Select(TriStateToggle.Create);
         }
+
+
 
         private void UpdateSearchList()
         {
@@ -159,22 +200,62 @@ namespace SeriousOrganizerGui
 
         private void BtnOpenLabelSelect(object sender, RoutedEventArgs e)
         {
-            List<Indexed> entriesSelected = dir_list.SelectedItems.Cast<Indexed>().Distinct( ).ToList();
+            List<Indexed> entriesSelected = dir_list.SelectedItems.Cast<Indexed>().Distinct().ToList();
 
             var indexes = new HashSet<int>();
-            foreach  (var ind in entriesSelected)
+            foreach (var ind in entriesSelected)
             {
                 if (!indexes.Add(ind.Index))
                 {
                     Debugger.Break();
                 }
             }
-            
+
 
             var select = new LabelSelect(entriesSelected);
             select.ShowInTaskbar = false;
             select.Owner = (Window)((dynamic)this.Parent).Parent;
             select.ShowDialog();
+        }
+
+        private void Label_list_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            ListViewItem item = sender as ListViewItem;
+            if (item != null)
+            {
+                var toggler = item.Content as TriStateToggle;
+
+                switch (toggler.State)
+                {
+                    case TriState.Neutral:
+                        toggler.State = TriState.Selected;
+                        break;
+                    case TriState.Selected:
+                    case TriState.UnSelected:
+                        toggler.State = TriState.Neutral;
+                        break;
+                }
+            }
+        }
+
+        private void Label_list_PreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            ListViewItem item = sender as ListViewItem;
+            if (item != null)
+            {
+                var toggler = item.Content as TriStateToggle;
+
+                switch (toggler.State)
+                {
+                    case TriState.Neutral:
+                        toggler.State = TriState.UnSelected;
+                        break;
+                    case TriState.Selected:
+                    case TriState.UnSelected:
+                        toggler.State = TriState.Neutral;
+                        break;
+                }
+            }
         }
     }
 }
