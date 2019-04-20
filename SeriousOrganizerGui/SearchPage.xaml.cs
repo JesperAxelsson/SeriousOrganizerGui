@@ -21,7 +21,7 @@ using System.Windows.Shapes;
 
 namespace SeriousOrganizerGui
 {
-    public enum TriState
+    public enum TriState : byte
     {
         Neutral = 0,
         Selected = 1,
@@ -55,7 +55,7 @@ namespace SeriousOrganizerGui
             }
         }
 
-
+        public int Id { get => _inner.Id; }
         public string Name { get => _inner.Name; }
     }
 
@@ -235,6 +235,9 @@ namespace SeriousOrganizerGui
                         toggler.State = TriState.Neutral;
                         break;
                 }
+
+                DataClient.Label.FilterLabel(toggler.Id, (byte)toggler.State);
+                UpdateSearchList();
             }
         }
 
@@ -255,6 +258,9 @@ namespace SeriousOrganizerGui
                         toggler.State = TriState.Neutral;
                         break;
                 }
+
+                DataClient.Label.FilterLabel(toggler.Id, (byte)toggler.State);
+                UpdateSearchList();
             }
         }
     }

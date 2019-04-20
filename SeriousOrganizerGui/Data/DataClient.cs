@@ -78,6 +78,10 @@ namespace SeriousOrganizerGui.Data
                 _client.SendAddLabelsToDir(entryIds, labelIds);
             }
 
+            public void FilterLabel(int id , byte state)
+            {
+                _client.FilterLabel(id, state);
+            }
         }
     }
 }

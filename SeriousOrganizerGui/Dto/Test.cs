@@ -26,45 +26,44 @@ namespace SeriousOrganizerGui.Dto
 
     public static class RequestType
     {
-        private const byte DirRequest = 1;
-        private const byte FileRequest = 2;
-        private const byte AddPath = 3;
-        private const byte RemovePath = 4;
-        private const byte ReloadStore = 5;
-        private const byte ChangeSearchText = 6;
-        private const byte DirCount = 7;
-        private const byte DirFileCount = 8;
-        private const byte DeletePath = 9;
-        private const byte Sort = 10;
-        private const byte LabelAdd = 11;
-        private const byte LabelRemove = 12;
-        private const byte LabelsGet = 13;
-        private const byte LabelsGetForEntry = 14;
-        private const byte AddLabelsToDir = 15;
+        private const UInt16 DirRequest = 1;
+        private const UInt16 FileRequest = 2;
+        private const UInt16 AddPath = 3;
+        private const UInt16 RemovePath = 4;
+        private const UInt16 ReloadStore = 5;
+        private const UInt16 ChangeSearchText = 6;
+        private const UInt16 DirCount = 7;
+        private const UInt16 DirFileCount = 8;
+        private const UInt16 DeletePath = 9;
+        private const UInt16 Sort = 10;
+        private const UInt16 LabelAdd = 11;
+        private const UInt16 LabelRemove = 12;
+        private const UInt16 LabelsGet = 13;
+        private const UInt16 LabelsGetForEntry = 14;
+        private const UInt16 AddLabelsToDir = 15;
+        private const UInt16 FilterLabel = 16;
 
 
         public static byte[] CreateReloadRequest()
         {
-            return new byte[] { ReloadStore };
+            return BitConverter.GetBytes(ReloadStore);
         }
 
         public static byte[] CreateChangeSearchText()
         {
-            return new byte[] { ChangeSearchText };
+            return BitConverter.GetBytes(ChangeSearchText);
         }
 
         public static byte[] CreateDirCountRequest()
         {
-            var req = new List<byte>();
-            req.Add(DirCount);
-            return req.ToArray();
+            return BitConverter.GetBytes(DirCount);
         }
 
 
         public static byte[] CreateDirRequest(int ix)
         {
             var req = new List<byte>();
-            req.Add(DirRequest);
+            req.AddRange(BitConverter.GetBytes(DirRequest));
             req.AddRange(BitConverter.GetBytes((UInt32)ix));
             return req.ToArray();
         }
@@ -72,7 +71,7 @@ namespace SeriousOrganizerGui.Dto
         public static byte[] CreateDirFileCountRequest(int ix)
         {
             var req = new List<byte>();
-            req.Add(DirFileCount);
+            req.AddRange(BitConverter.GetBytes(DirFileCount));
             req.AddRange(BitConverter.GetBytes((UInt32)ix));
             return req.ToArray();
         }
@@ -80,7 +79,7 @@ namespace SeriousOrganizerGui.Dto
         public static byte[] CreateFileRequest(int dirIx, int fileIx)
         {
             var req = new List<byte>();
-            req.Add(FileRequest);
+            req.AddRange(BitConverter.GetBytes(FileRequest));
             req.AddRange(BitConverter.GetBytes((UInt32)dirIx));
             req.AddRange(BitConverter.GetBytes((UInt32)fileIx));
             return req.ToArray();
@@ -89,7 +88,7 @@ namespace SeriousOrganizerGui.Dto
         public static byte[] CreateSortRequest(SortColumn column, SortOrder order)
         {
             var req = new List<byte>();
-            req.Add(Sort);
+            req.AddRange(BitConverter.GetBytes(Sort));
             req.AddRange(BitConverter.GetBytes((UInt32)column));
             req.AddRange(BitConverter.GetBytes((UInt32)order));
             return req.ToArray();
@@ -97,26 +96,26 @@ namespace SeriousOrganizerGui.Dto
 
         public static byte[] CreateLabelAddRequest()
         {
-            return new byte[] { LabelAdd };
+            return BitConverter.GetBytes(LabelAdd);
         }
 
         public static byte[] CreateLabelRemoveRequest(int id)
         {
             var req = new List<byte>();
-            req.Add(LabelRemove);
+            req.AddRange(BitConverter.GetBytes(LabelRemove));
             req.AddRange(BitConverter.GetBytes((UInt32)id));
             return req.ToArray();
         }
 
         public static byte[] CreateLabelsGetRequest()
         {
-            return new byte[] { LabelsGet };
+            return BitConverter.GetBytes(LabelsGet);
         }
 
         public static byte[] CreateLabelsGetForEntryRequest(int id)
         {
             var req = new List<byte>();
-            req.Add(LabelsGetForEntry);
+            req.AddRange(BitConverter.GetBytes(LabelsGetForEntry));
             req.AddRange(BitConverter.GetBytes((UInt32)id));
             return req.ToArray();
         }
@@ -124,9 +123,19 @@ namespace SeriousOrganizerGui.Dto
         public static byte[] CreateAddLabelsToDir(IEnumerable<int> ids, IEnumerable<int> labelIds)
         {
             var req = new List<byte>();
-            req.Add(AddLabelsToDir);
+            req.AddRange(BitConverter.GetBytes(AddLabelsToDir));
             AddList(req, ids);
             AddList(req, labelIds);
+            return req.ToArray();
+        }
+
+        public static byte[] CreateFilterLabel(int labelId, byte state )
+        {
+            var req = new List<byte>();
+            req.AddRange(BitConverter.GetBytes(FilterLabel));
+            req.AddRange(BitConverter.GetBytes(labelId));
+            req.Add(state);
+            
             return req.ToArray();
         }
 

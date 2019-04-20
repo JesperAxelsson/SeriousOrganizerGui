@@ -107,6 +107,12 @@ namespace SeriousOrganizerGui
             return (int)_client.WaitResponseU32();
         }
 
+        public int FilterLabel(int labelId, byte state)
+        {
+            _client.SendRequest(RequestType.CreateFilterLabel(labelId, state));
+            return (int)_client.WaitResponseU32();
+        }
+
         public void Dispose()
         {
             _client.Dispose();
