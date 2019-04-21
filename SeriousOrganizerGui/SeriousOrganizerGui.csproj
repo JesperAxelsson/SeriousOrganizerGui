@@ -71,6 +71,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="AddLabelDialog.xaml.cs">
+      <DependentUpon>AddLabelDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Data\BetterObservable.cs" />
     <Compile Include="Data\DataClient.cs" />
     <Compile Include="Data\Lens.cs" />
@@ -81,6 +84,10 @@
     <Compile Include="SearchPage.xaml.cs">
       <DependentUpon>SearchPage.xaml</DependentUpon>
     </Compile>
+    <Page Include="AddLabelDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="LabelSelect.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

@@ -200,15 +200,12 @@ namespace SeriousOrganizerGui
         }
 
 
-        private void BtnAddLabel_Click(object sender, RoutedEventArgs e)
+        private void add_label_Button_Click(object sender, RoutedEventArgs e)
         {
-            var name = txt_newlabel.Text;
-            if (string.IsNullOrWhiteSpace(name))
-            {
-                return;
-            }
-
-            DataClient.Label.Add(name);
+            var select = new AddLabelDialog();
+            select.ShowInTaskbar = false;
+            select.Owner = Window.GetWindow(this);
+            select.ShowDialog();
         }
 
         private void BtnOpenLabelSelect(object sender, RoutedEventArgs e)
@@ -217,7 +214,7 @@ namespace SeriousOrganizerGui
 
             var select = new LabelSelect(entriesSelected);
             select.ShowInTaskbar = false;
-            select.Owner = (Window)((dynamic)this.Parent).Parent;
+            select.Owner = Window.GetWindow(this);
             select.ShowDialog();
         }
 
@@ -271,9 +268,10 @@ namespace SeriousOrganizerGui
         {
             var lbl = label_list.SelectedItem as TriStateToggle;
 
-            if (lbl != null && MessageBox.Show("Are you sure you want to remove label: " + lbl.Name, "Delete", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
+            if (lbl != null && MessageBox.Show(Window.GetWindow(this), "Are you sure you want to remove label: " + lbl.Name, "Delete", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
             {
                 DataClient.Label.Remove(lbl.Id);
+                UpdateSearchList();
             }
         }
     }

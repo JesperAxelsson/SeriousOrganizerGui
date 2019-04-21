@@ -1,0 +1,19 @@
+﻿<Window x:Class="SeriousOrganizerGui.AddLabelDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SeriousOrganizerGui"
+        mc:Ignorable="d"
+        Title="Add new label" Height="150" Width="400">
+    <Grid>
+        <StackPanel>
+            <Label Content="New Label" Margin="5"/>
+            <TextBox Name="txt_newlabel" VerticalAlignment="Center" Width="200" Height="25" VerticalContentAlignment="Center" Margin="5"/>
+            <StackPanel Orientation="Horizontal">
+                <Button Content="Ok" Margin="5" Click="BtnAddLabel_Click"/>
+                <Button Content="Cancel" Margin="5" Click="BtnClose_Click" />
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</Window>
