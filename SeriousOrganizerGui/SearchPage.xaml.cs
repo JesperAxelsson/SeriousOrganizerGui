@@ -68,6 +68,7 @@ namespace SeriousOrganizerGui
         private ItemProviderTurbo<DirEntry> _turbo;
 
         private DirEntryProvider _dirEntryProvider;
+        private Lens<Dto.Label, TriStateToggle> _labelLens;
 
 
         public SearchPage()
@@ -80,7 +81,8 @@ namespace SeriousOrganizerGui
             _turbo.Update();
 
             dir_list.ItemsSource = _turbo;
-            label_list.ItemsSource = DataClient.Label.Get().Select(TriStateToggle.Create);
+            _labelLens = new Lens<Dto.Label, TriStateToggle>(DataClient.Label.Get(), TriStateToggle.Create);
+            label_list.ItemsSource = _labelLens.GetSink;
         }
 
 
@@ -213,16 +215,6 @@ namespace SeriousOrganizerGui
         {
             List<Indexed> entriesSelected = dir_list.SelectedItems.Cast<Indexed>().Distinct().ToList();
 
-            var indexes = new HashSet<int>();
-            foreach (var ind in entriesSelected)
-            {
-                if (!indexes.Add(ind.Index))
-                {
-                    Debugger.Break();
-                }
-            }
-
-
             var select = new LabelSelect(entriesSelected);
             select.ShowInTaskbar = false;
             select.Owner = (Window)((dynamic)this.Parent).Parent;
@@ -272,6 +264,16 @@ namespace SeriousOrganizerGui
 
                 DataClient.Label.FilterLabel(toggler.Id, (byte)toggler.State);
                 UpdateSearchList();
+            }
+        }
+
+        private void remove_label_Button_Click(object sender, RoutedEventArgs e)
+        {
+            var lbl = label_list.SelectedItem as TriStateToggle;
+
+            if (lbl != null && MessageBox.Show("Are you sure you want to remove label: " + lbl.Name, "Delete", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
+            {
+                DataClient.Label.Remove(lbl.Id);
             }
         }
     }

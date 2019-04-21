@@ -35,15 +35,20 @@
                 </ListView.ItemContainerStyle>
             </ListView>
 
-            <ToggleButton Name="button">
-                <ToggleButton.Template>
-                    <ControlTemplate TargetType="ToggleButton">
-                        <Border BorderBrush="Black" BorderThickness="1">
-                            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Height="20">Add Label</TextBlock>
-                        </Border>
-                    </ControlTemplate>
-                </ToggleButton.Template>
-            </ToggleButton>
+
+
+            <StackPanel Orientation="Horizontal">
+                <ToggleButton Name="button">
+                    <ToggleButton.Template>
+                        <ControlTemplate TargetType="ToggleButton">
+                            <Border BorderBrush="Black" BorderThickness="1">
+                                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Height="20">Add Label</TextBlock>
+                            </Border>
+                        </ControlTemplate>
+                    </ToggleButton.Template>
+                </ToggleButton>
+                <Button Content="Remove" Click="remove_label_Button_Click"/>
+            </StackPanel>
 
             <Popup IsOpen="{Binding IsChecked, ElementName=button}" StaysOpen="False" Placement="Center" >
                 <Border Background="LightYellow">

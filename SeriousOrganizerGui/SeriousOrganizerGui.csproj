@@ -73,6 +73,7 @@
     </ApplicationDefinition>
     <Compile Include="Data\BetterObservable.cs" />
     <Compile Include="Data\DataClient.cs" />
+    <Compile Include="Data\Lens.cs" />
     <Compile Include="Data\Providers.cs" />
     <Compile Include="LabelSelect.xaml.cs">
       <DependentUpon>LabelSelect.xaml</DependentUpon>
