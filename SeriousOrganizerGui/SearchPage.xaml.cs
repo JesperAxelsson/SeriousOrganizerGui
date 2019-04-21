@@ -8,6 +8,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -206,6 +207,20 @@ namespace SeriousOrganizerGui
             select.ShowInTaskbar = false;
             select.Owner = Window.GetWindow(this);
             select.ShowDialog();
+        }
+
+        private async void BtnReloadEntries(object sender, RoutedEventArgs e)
+        {
+            LoadPanel.Visibility = Visibility.Visible;
+            dir_list.Visibility = Visibility.Collapsed;
+            file_list.Visibility = Visibility.Collapsed;
+            await Task.Run(() => DataClient.Client.SendReloadRequest())
+                            .ContinueWith(task =>
+                            {
+                                LoadPanel.Visibility = Visibility.Collapsed;
+                                dir_list.Visibility = Visibility.Visible;
+                                file_list.Visibility = Visibility.Visible;
+                            }, System.Threading.CancellationToken.None, TaskContinuationOptions.None, TaskScheduler.FromCurrentSynchronizationContext());
         }
 
         private void BtnOpenLabelSelect(object sender, RoutedEventArgs e)

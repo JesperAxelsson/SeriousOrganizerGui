@@ -38,21 +38,6 @@ namespace SeriousOrganizerGui
             DataClient.Connect();
 
             InitializeComponent();
-
-            //_client.Connect();
-            //_dirEntryProvider = new DirEntryProvider(_client);
-            //_turbo = new ItemProviderTurbo<DirEntry>(_dirEntryProvider);
-            //_client.SendTextSearchChanged(""); // Reset search text
-            //_turbo.Update();
-
-            //dir_list.ItemsSource = _turbo;
-            //label_list.ItemsSource = _labelList;
-            //UpdateLabels();
-
-            //var bin = new Binding("");
-            //bin.Mode = 
         }
-
-
     }
 }

@@ -21,14 +21,11 @@ namespace SeriousOrganizerGui
             Console.WriteLine("Up and running!");
         }
 
-        public void SendReloadRequest(Action doneCallback)
+        public void SendReloadRequest(Action doneCallback = null)
         {
-            Task.Run(() =>
-            {
-                _client.SendRequest(RequestType.CreateChangeSearchText());
-                var resp = _client.WaitResponseU32();
-                doneCallback();
-            });
+            _client.SendRequest(RequestType.CreateReloadRequest());
+            var resp = _client.WaitResponseU32();
+            doneCallback?.Invoke();
         }
 
         public int SendTextSearchChanged(String text)
