@@ -34,6 +34,7 @@ namespace SeriousOrganizerGui
             }
 
             DataClient.Label.Add(name);
+            this.Close();
         }
 
 

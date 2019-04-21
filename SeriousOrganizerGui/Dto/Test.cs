@@ -26,44 +26,44 @@ namespace SeriousOrganizerGui.Dto
 
     public static class RequestType
     {
-        private const UInt16 DirRequest = 1;
-        private const UInt16 FileRequest = 2;
-        private const UInt16 AddPath = 3;
-        private const UInt16 RemovePath = 4;
-        private const UInt16 ReloadStore = 5;
-        private const UInt16 ChangeSearchText = 6;
-        private const UInt16 DirCount = 7;
-        private const UInt16 DirFileCount = 8;
-        private const UInt16 DeletePath = 9;
-        private const UInt16 Sort = 10;
-        private const UInt16 LabelAdd = 11;
-        private const UInt16 LabelRemove = 12;
-        private const UInt16 LabelsGet = 13;
-        private const UInt16 LabelsGetForEntry = 14;
-        private const UInt16 AddLabelsToDir = 15;
-        private const UInt16 FilterLabel = 16;
+        private static byte[] DirRequest = BitConverter.GetBytes((UInt16) 1 );
+        private static byte[] FileRequest = BitConverter.GetBytes((UInt16)2);
+        private static byte[] AddPath = BitConverter.GetBytes((UInt16)3);
+        private static byte[] RemovePath = BitConverter.GetBytes((UInt16)4);
+        private static byte[] ReloadStore = BitConverter.GetBytes((UInt16)5);
+        private static byte[] ChangeSearchText = BitConverter.GetBytes((UInt16)6);
+        private static byte[] DirCount = BitConverter.GetBytes((UInt16)7);
+        private static byte[] DirFileCount = BitConverter.GetBytes((UInt16)8);
+        private static byte[] DeletePath = BitConverter.GetBytes((UInt16)9);
+        private static byte[] Sort = BitConverter.GetBytes((UInt16)10);
+        private static byte[] LabelAdd = BitConverter.GetBytes((UInt16)11);
+        private static byte[] LabelRemove = BitConverter.GetBytes((UInt16)12);
+        private static byte[] LabelsGet = BitConverter.GetBytes((UInt16)13);
+        private static byte[] LabelsGetForEntry = BitConverter.GetBytes((UInt16)14);
+        private static byte[] AddLabelsToDir = BitConverter.GetBytes((UInt16)15);
+        private static byte[] FilterLabel = BitConverter.GetBytes((UInt16)16);
 
 
         public static byte[] CreateReloadRequest()
         {
-            return BitConverter.GetBytes(ReloadStore);
+            return ReloadStore;
         }
 
         public static byte[] CreateChangeSearchText()
         {
-            return BitConverter.GetBytes(ChangeSearchText);
+            return ChangeSearchText;
         }
 
         public static byte[] CreateDirCountRequest()
         {
-            return BitConverter.GetBytes(DirCount);
+            return DirCount;
         }
 
 
         public static byte[] CreateDirRequest(int ix)
         {
             var req = new List<byte>();
-            req.AddRange(BitConverter.GetBytes(DirRequest));
+            req.AddRange(DirRequest);
             req.AddRange(BitConverter.GetBytes((UInt32)ix));
             return req.ToArray();
         }
@@ -71,7 +71,7 @@ namespace SeriousOrganizerGui.Dto
         public static byte[] CreateDirFileCountRequest(int ix)
         {
             var req = new List<byte>();
-            req.AddRange(BitConverter.GetBytes(DirFileCount));
+            req.AddRange(DirFileCount);
             req.AddRange(BitConverter.GetBytes((UInt32)ix));
             return req.ToArray();
         }
@@ -79,7 +79,7 @@ namespace SeriousOrganizerGui.Dto
         public static byte[] CreateFileRequest(int dirIx, int fileIx)
         {
             var req = new List<byte>();
-            req.AddRange(BitConverter.GetBytes(FileRequest));
+            req.AddRange(FileRequest);
             req.AddRange(BitConverter.GetBytes((UInt32)dirIx));
             req.AddRange(BitConverter.GetBytes((UInt32)fileIx));
             return req.ToArray();
@@ -88,7 +88,7 @@ namespace SeriousOrganizerGui.Dto
         public static byte[] CreateSortRequest(SortColumn column, SortOrder order)
         {
             var req = new List<byte>();
-            req.AddRange(BitConverter.GetBytes(Sort));
+            req.AddRange(Sort);
             req.AddRange(BitConverter.GetBytes((UInt32)column));
             req.AddRange(BitConverter.GetBytes((UInt32)order));
             return req.ToArray();
@@ -96,26 +96,26 @@ namespace SeriousOrganizerGui.Dto
 
         public static byte[] CreateLabelAddRequest()
         {
-            return BitConverter.GetBytes(LabelAdd);
+            return LabelAdd;
         }
 
         public static byte[] CreateLabelRemoveRequest(int id)
         {
             var req = new List<byte>();
-            req.AddRange(BitConverter.GetBytes(LabelRemove));
+            req.AddRange(LabelRemove);
             req.AddRange(BitConverter.GetBytes((UInt32)id));
             return req.ToArray();
         }
 
         public static byte[] CreateLabelsGetRequest()
         {
-            return BitConverter.GetBytes(LabelsGet);
+            return LabelsGet;
         }
 
         public static byte[] CreateLabelsGetForEntryRequest(int id)
         {
             var req = new List<byte>();
-            req.AddRange(BitConverter.GetBytes(LabelsGetForEntry));
+            req.AddRange(LabelsGetForEntry);
             req.AddRange(BitConverter.GetBytes((UInt32)id));
             return req.ToArray();
         }
@@ -123,19 +123,19 @@ namespace SeriousOrganizerGui.Dto
         public static byte[] CreateAddLabelsToDir(IEnumerable<int> ids, IEnumerable<int> labelIds)
         {
             var req = new List<byte>();
-            req.AddRange(BitConverter.GetBytes(AddLabelsToDir));
+            req.AddRange(AddLabelsToDir);
             AddList(req, ids);
             AddList(req, labelIds);
             return req.ToArray();
         }
 
-        public static byte[] CreateFilterLabel(int labelId, byte state )
+        public static byte[] CreateFilterLabel(int labelId, byte state)
         {
             var req = new List<byte>();
-            req.AddRange(BitConverter.GetBytes(FilterLabel));
+            req.AddRange(FilterLabel);
             req.AddRange(BitConverter.GetBytes(labelId));
             req.Add(state);
-            
+
             return req.ToArray();
         }
 

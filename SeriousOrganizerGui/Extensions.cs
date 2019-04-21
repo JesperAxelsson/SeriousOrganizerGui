@@ -20,26 +20,29 @@ namespace SeriousOrganizerGui
         /// <returns></returns>
         public static byte[] ReadMessage(this PipeStream stream)
         {
-            MemoryStream memoryStream = new MemoryStream();
-
-            byte[] buffer = new byte[stream.InBufferSize];
-
-            byte[] bufferSize = new byte[4];
             stream.Read(bufferSize, 0, 4);
             var size = BitConverter.ToInt32(bufferSize, 0);
 
+            memoryStream.Position = 0;
             memoryStream.Write(buffer, 0, stream.Read(buffer, 0, size));
 
             return memoryStream.ToArray();
         }
 
+        private static MemoryStream memoryStream = new MemoryStream();
+
+        private static byte[] buffer = new byte[500 * 1024];
+        private static byte[] bufferSize = new byte[4];
+
+        private static List<byte> _bytesBuffer = new List<byte>();
+
         public static void SendRequest<T>(this PipeStream stream, byte[] req, T obj)
         {
-            var bytes = new List<byte>();
-            bytes.AddRange(req);
-            bytes.AddRange(MessagePackSerializer.Serialize(obj));
-            stream.Write(BitConverter.GetBytes(bytes.Count), 0, 4);
-            stream.Write(bytes.ToArray(), 0, bytes.Count);
+            _bytesBuffer.Clear();
+            _bytesBuffer.AddRange(req);
+            _bytesBuffer.AddRange(MessagePackSerializer.Serialize(obj));
+            stream.Write(BitConverter.GetBytes(_bytesBuffer.Count), 0, 4);
+            stream.Write(_bytesBuffer.ToArray(), 0, _bytesBuffer.Count);
             stream.Flush();
         }
 
