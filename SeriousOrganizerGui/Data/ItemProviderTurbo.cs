@@ -60,12 +60,20 @@ namespace SeriousOrganizerGui.Data
     {
         public event NotifyCollectionChangedEventHandler CollectionChanged;
 
-        private readonly IItemProvider<T> _provider;
+        private IItemProvider<T> _provider;
         private LRUCache<int, T> _lruCache = new LRUCache<int, T>(200);
 
         public ItemProviderTurbo(IItemProvider<T> provider)
         {
             _provider = provider;
+        }
+
+        public IItemProvider<T> Provider { get => _provider; }
+
+        public void ChangeProvider(IItemProvider<T> provider)
+        {
+            _provider = provider;
+            Update();
         }
 
         public void Update()

@@ -31,12 +31,17 @@ namespace SeriousOrganizerGui.Data.Providers
     public class FileEntryProvider : IItemProvider<FileEntry>
     {
         private readonly Client _client;
-        private readonly int _dirIndex;
+        private int _dirIndex;
 
         public FileEntryProvider(Client client, int dirIndex)
         {
             _client = client;
             _dirIndex = dirIndex;
+        }
+
+        public void SetDirIndex(int index)
+        {
+            _dirIndex = index;
         }
 
         public int GetCount()

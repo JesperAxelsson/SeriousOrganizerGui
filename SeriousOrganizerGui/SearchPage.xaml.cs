@@ -103,11 +103,22 @@ namespace SeriousOrganizerGui
             var lv = sender as ListView;
             if (lv.SelectedIndex < 0) return;
 
+            var currentProvider = file_list.ItemsSource as ItemProviderTurbo<FileEntry>;
             Console.WriteLine("Selected row: " + lv.SelectedIndex);
-            var provider = new FileEntryProvider(DataClient.Client, lv.SelectedIndex);
-            var foo = new ItemProviderTurbo<FileEntry>(provider);
-            foo.Update();
-            file_list.ItemsSource = foo;
+
+            if (currentProvider is null)
+            {
+                var provider = new FileEntryProvider(DataClient.Client, lv.SelectedIndex);
+                var foo = new ItemProviderTurbo<FileEntry>(provider);
+                foo.Update();
+                file_list.ItemsSource = foo;
+            }
+            else
+            {
+                (currentProvider.Provider as FileEntryProvider).SetDirIndex(lv.SelectedIndex);
+                currentProvider.Update();
+                file_list.SelectedItem = null;
+            }
         }
 
         private void file_list_MouseDoubleClick(object sender, MouseButtonEventArgs e)
