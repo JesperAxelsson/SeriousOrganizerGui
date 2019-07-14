@@ -110,6 +110,25 @@ namespace SeriousOrganizerGui
             return (int)_client.WaitResponseU32();
         }
 
+        public int SendLocationAdd(string name, string path)
+        {
+            _client.SendRequest(RequestType.CreateLocationAddRequest(name, path));
+            return (int)_client.WaitResponseU32();
+        }
+
+        public int SendLocationRemove(int locationId)
+        {
+            _client.SendRequest(RequestType.CreateLocationRemoveRequest(locationId));
+            return (int)_client.WaitResponseU32();
+        }
+
+        public List<Location> SendLocationGet()
+        {
+            _client.SendRequest(RequestType.CreateLocationGetRequest());
+            var response = _client.WaitResponse<List<Location>>();
+            return new List<Location>(response);
+        }
+
         public void Dispose()
         {
             _client.Dispose();

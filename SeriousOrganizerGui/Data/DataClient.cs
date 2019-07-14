@@ -17,6 +17,7 @@ namespace SeriousOrganizerGui.Data
 
         public static Client Client => _client;
         public static LabelHandler Label;
+        public static LocationHandler Location;
 
         public static void Connect()
         {
@@ -25,10 +26,9 @@ namespace SeriousOrganizerGui.Data
                 _isConnected = true;
                 _client.Connect();
                 Label = new LabelHandler(_client);
+                Location= new LocationHandler(_client);
             }
         }
-
-
     }
 
     namespace Internal
@@ -81,6 +81,42 @@ namespace SeriousOrganizerGui.Data
             public void FilterLabel(int id , byte state)
             {
                 _client.FilterLabel(id, state);
+            }
+        }
+
+        public class LocationHandler
+        {
+
+            protected Client _client;
+
+            public LocationHandler(Client client)
+            {
+                _client = client;
+                Update();
+            }
+
+            private BetterObservable<Location> _locationList = new BetterObservable<Location>();
+
+            public BetterObservable<Location> Get()
+            {
+                return _locationList;
+            }
+
+            public void Update()
+            {
+                _locationList.Replace(_client.SendLocationGet());
+            }
+
+            public void Add(string name, string path)
+            {
+                _client.SendLocationAdd(name, path);
+                Update();
+            }
+
+            public void Remove(int id)
+            {
+                _client.SendLocationRemove(id);
+                Update();
             }
         }
     }

@@ -53,7 +53,8 @@
             <TextBox Name="txt_search" VerticalAlignment="Center" Width="200" Height="25" VerticalContentAlignment="Center" TextChanged="txt_search_TextChanged"/>
 
             <Button Click="BtnReloadEntries" Content="Reload" Margin="5"/>
-            <Button Click="BtnOpenLabelSelect" Content="Open dialog" Margin="5" />
+            <Button Click="BtnOpenLabelSelect" Content="Label..." Margin="5" />
+            <Button Click="BtnOpenLocationSelect" Content="Locations..." Margin="5" />
         </StackPanel>
 
         <!-- Entry List -->

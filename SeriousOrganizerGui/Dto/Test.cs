@@ -26,7 +26,7 @@ namespace SeriousOrganizerGui.Dto
 
     public static class RequestType
     {
-        private static byte[] DirRequest = BitConverter.GetBytes((UInt16) 1 );
+        private static byte[] DirRequest = BitConverter.GetBytes((UInt16)1);
         private static byte[] FileRequest = BitConverter.GetBytes((UInt16)2);
         private static byte[] AddPath = BitConverter.GetBytes((UInt16)3);
         private static byte[] RemovePath = BitConverter.GetBytes((UInt16)4);
@@ -42,6 +42,9 @@ namespace SeriousOrganizerGui.Dto
         private static byte[] LabelsGetForEntry = BitConverter.GetBytes((UInt16)14);
         private static byte[] AddLabelsToDir = BitConverter.GetBytes((UInt16)15);
         private static byte[] FilterLabel = BitConverter.GetBytes((UInt16)16);
+        private static byte[] LocationAdd = BitConverter.GetBytes((UInt16)17);
+        private static byte[] LocationRemove = BitConverter.GetBytes((UInt16)18);
+        private static byte[] LocationsGet = BitConverter.GetBytes((UInt16)19);
 
 
         public static byte[] CreateReloadRequest()
@@ -59,39 +62,24 @@ namespace SeriousOrganizerGui.Dto
             return DirCount;
         }
 
-
         public static byte[] CreateDirRequest(int ix)
         {
-            var req = new List<byte>();
-            req.AddRange(DirRequest);
-            req.AddRange(BitConverter.GetBytes((UInt32)ix));
-            return req.ToArray();
+            return CreateIntRequest(DirRequest, ix) .ToArray();
         }
 
         public static byte[] CreateDirFileCountRequest(int ix)
         {
-            var req = new List<byte>();
-            req.AddRange(DirFileCount);
-            req.AddRange(BitConverter.GetBytes((UInt32)ix));
-            return req.ToArray();
+            return CreateIntRequest(DirFileCount, ix).ToArray();
         }
 
         public static byte[] CreateFileRequest(int dirIx, int fileIx)
         {
-            var req = new List<byte>();
-            req.AddRange(FileRequest);
-            req.AddRange(BitConverter.GetBytes((UInt32)dirIx));
-            req.AddRange(BitConverter.GetBytes((UInt32)fileIx));
-            return req.ToArray();
+            return CreateIntRequest(FileRequest, dirIx, fileIx).ToArray();
         }
 
         public static byte[] CreateSortRequest(SortColumn column, SortOrder order)
         {
-            var req = new List<byte>();
-            req.AddRange(Sort);
-            req.AddRange(BitConverter.GetBytes((UInt32)column));
-            req.AddRange(BitConverter.GetBytes((UInt32)order));
-            return req.ToArray();
+            return CreateIntRequest(Sort, (Int32)column, (Int32)order).ToArray();
         }
 
         public static byte[] CreateLabelAddRequest()
@@ -101,10 +89,7 @@ namespace SeriousOrganizerGui.Dto
 
         public static byte[] CreateLabelRemoveRequest(int id)
         {
-            var req = new List<byte>();
-            req.AddRange(LabelRemove);
-            req.AddRange(BitConverter.GetBytes((UInt32)id));
-            return req.ToArray();
+            return CreateIntRequest(LabelRemove, id).ToArray();
         }
 
         public static byte[] CreateLabelsGetRequest()
@@ -114,10 +99,7 @@ namespace SeriousOrganizerGui.Dto
 
         public static byte[] CreateLabelsGetForEntryRequest(int id)
         {
-            var req = new List<byte>();
-            req.AddRange(LabelsGetForEntry);
-            req.AddRange(BitConverter.GetBytes((UInt32)id));
-            return req.ToArray();
+            return CreateIntRequest(LabelsGetForEntry, id).ToArray();
         }
 
         public static byte[] CreateAddLabelsToDir(IEnumerable<int> ids, IEnumerable<int> labelIds)
@@ -131,12 +113,49 @@ namespace SeriousOrganizerGui.Dto
 
         public static byte[] CreateFilterLabel(int labelId, byte state)
         {
-            var req = new List<byte>();
-            req.AddRange(FilterLabel);
-            req.AddRange(BitConverter.GetBytes(labelId));
+            var req = CreateIntRequest(FilterLabel, labelId);
             req.Add(state);
-
             return req.ToArray();
+        }
+
+        public static byte[] CreateLocationAddRequest(string name, string path)
+        {
+            var req = new List<byte>();
+            req.AddRange(LocationAdd);
+            AddString(req, name);
+            AddString(req, path);
+            return req.ToArray();
+        }
+
+        public static byte[] CreateLocationRemoveRequest(int locationId)
+        {
+            return CreateIntRequest(LocationRemove, locationId).ToArray();
+        }
+        public static byte[] CreateLocationGetRequest()
+        {
+            return LocationsGet;
+        }
+
+        private static List<byte> CreateIntRequest(byte[] requestType, int number)
+        {
+            var req = new List<byte>();
+            req.AddRange(requestType);
+            req.AddRange(BitConverter.GetBytes((UInt32)number));
+            return req;
+        }
+
+        private static List<byte> CreateIntRequest(byte[] requestType, int number, int number2)
+        {
+            var req = new List<byte>();
+            req.AddRange(requestType);
+            req.AddRange(BitConverter.GetBytes((UInt32)number));
+            req.AddRange(BitConverter.GetBytes((UInt32)number2));
+            return req;
+        }
+
+        public static void AddInt32(List<byte> request, int data)
+        {
+            request.AddRange(BitConverter.GetBytes((UInt32)data));
         }
 
         public static void AddList(List<byte> request, IEnumerable<int> data)
@@ -146,6 +165,18 @@ namespace SeriousOrganizerGui.Dto
             {
                 request.AddRange(BitConverter.GetBytes((UInt32)elem));
             }
+        }
+
+        public static void AddString(List<byte> request, string str)
+        {
+            byte[] utf16bytes = Encoding.Default.GetBytes(str);
+            var utf8string = Encoding.UTF8.GetString(utf16bytes);
+            byte[] utf8bytes = Encoding.UTF8.GetBytes(utf8string);
+
+            var st= Encoding.UTF8.GetString(utf8bytes);
+
+            request.AddRange(BitConverter.GetBytes((UInt32)utf8bytes.Count()));
+            request.AddRange(utf8bytes);
         }
     }
 
@@ -200,5 +231,18 @@ namespace SeriousOrganizerGui.Dto
         public int Id { get; set; }
         [Key(1)]
         public string Name { get; set; }
+    }
+
+    [MessagePackObject, ToString]
+    public class Location
+    {
+        [Key(0)]
+        public int Id { get; set; }
+        [Key(1)]
+        public string Name { get; set; }
+        [Key(2)]
+        public string Path { get; set; }
+        [Key(3)]
+        public Int64 Size { get; set; }
     }
 }

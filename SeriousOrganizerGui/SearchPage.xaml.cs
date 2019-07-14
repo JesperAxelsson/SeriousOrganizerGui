@@ -233,6 +233,14 @@ namespace SeriousOrganizerGui
             select.ShowDialog();
         }
 
+        private void BtnOpenLocationSelect(object sender, RoutedEventArgs e)
+        {
+            var select = new LocationSelect();
+            select.ShowInTaskbar = false;
+            select.Owner = Window.GetWindow(this);
+            select.ShowDialog();
+        }
+
         private void Label_list_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             ListViewItem item = sender as ListViewItem;
