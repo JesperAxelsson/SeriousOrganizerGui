@@ -131,7 +131,7 @@ namespace SeriousOrganizerGui
 
             var path = ((FileEntry)lv.SelectedItem).Path;
 
-            Process.Start(new ProcessStartInfo(path) { CreateNoWindow = true });
+            Process.Start(new ProcessStartInfo(path) { CreateNoWindow = true, UseShellExecute = true });
         }
 
         private void MoreInfo(object sender, RoutedEventArgs e)
