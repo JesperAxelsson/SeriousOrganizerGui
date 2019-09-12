@@ -23,12 +23,12 @@
     </Resource>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Fody" Version="5.1.1">
+    <PackageReference Include="Fody" Version="6.0.0">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="MessagePack" Version="1.7.3.7" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
-    <PackageReference Include="ToString.Fody" Version="1.10.5" />
+    <PackageReference Include="ToString.Fody" Version="1.11.0" />
   </ItemGroup>
   <ItemGroup>
     <None Update="AddLabelDialog.xaml">
