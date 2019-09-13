@@ -357,7 +357,11 @@ namespace SeriousOrganizerGui
             {
                 try
                 {
-                    Directory.Delete(entry.Path, true);
+                    if (File.Exists(entry.Path))
+                        File.Delete(entry.Path);
+
+                    if (Directory.Exists(entry.Path))
+                        Directory.Delete(entry.Path, true);
                 }
                 catch (Exception ex)
                 {
