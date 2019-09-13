@@ -23,43 +23,7 @@ using System.Windows.Shapes;
 
 namespace SeriousOrganizerGui
 {
-    public enum TriState : byte
-    {
-        Neutral = 0,
-        Selected = 1,
-        UnSelected = 2,
-    }
-
-    public class TriStateToggle : INotifyPropertyChanged
-    {
-
-
-        private Dto.Label _inner;
-        private TriState _state;
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        public TriStateToggle(Dto.Label inner)
-        {
-            _state = TriState.Neutral;
-            _inner = inner;
-        }
-
-        public static TriStateToggle Create(Dto.Label inner) => new TriStateToggle(inner);
-
-        public TriState State
-        {
-            get => _state;
-            set
-            {
-                _state = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("State"));
-            }
-        }
-
-        public int Id { get => _inner.Id; }
-        public string Name { get => _inner.Name; }
-    }
+  
 
     /// <summary>
     /// Interaction logic for SearchPage.xaml
@@ -70,7 +34,7 @@ namespace SeriousOrganizerGui
         private ItemProviderTurbo<DirEntry> _turbo;
 
         private DirEntryProvider _dirEntryProvider;
-        private Lens<Dto.Label, TriStateToggle> _labelLens;
+
 
 
         public SearchPage()
@@ -83,8 +47,7 @@ namespace SeriousOrganizerGui
             _turbo.Update();
 
             dir_list.ItemsSource = _turbo;
-            _labelLens = new Lens<Dto.Label, TriStateToggle>(DataClient.Label.Get(), TriStateToggle.Create);
-            label_list.ItemsSource = _labelLens.GetSink;
+
         }
 
 
@@ -180,15 +143,6 @@ namespace SeriousOrganizerGui
             }
         }
 
-
-        private void add_label_Button_Click(object sender, RoutedEventArgs e)
-        {
-            var select = new AddLabelDialog();
-            select.ShowInTaskbar = false;
-            select.Owner = Window.GetWindow(this);
-            select.ShowDialog();
-        }
-
         private async void BtnReloadEntries(object sender, RoutedEventArgs e)
         {
             LoadPanel.Visibility = Visibility.Visible;
@@ -223,64 +177,6 @@ namespace SeriousOrganizerGui
             select.Owner = Window.GetWindow(this);
             select.ShowDialog();
         }
-
-        private void Label_list_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            ListViewItem item = sender as ListViewItem;
-            if (item != null)
-            {
-                var toggler = item.Content as TriStateToggle;
-
-                switch (toggler.State)
-                {
-                    case TriState.Neutral:
-                        toggler.State = TriState.Selected;
-                        break;
-                    case TriState.Selected:
-                    case TriState.UnSelected:
-                        toggler.State = TriState.Neutral;
-                        break;
-                }
-
-                DataClient.Label.FilterLabel(toggler.Id, (byte)toggler.State);
-                UpdateSearchList();
-            }
-        }
-
-        private void Label_list_PreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            ListViewItem item = sender as ListViewItem;
-            if (item != null)
-            {
-                var toggler = item.Content as TriStateToggle;
-
-                switch (toggler.State)
-                {
-                    case TriState.Neutral:
-                        toggler.State = TriState.UnSelected;
-                        break;
-                    case TriState.Selected:
-                    case TriState.UnSelected:
-                        toggler.State = TriState.Neutral;
-                        break;
-                }
-
-                DataClient.Label.FilterLabel(toggler.Id, (byte)toggler.State);
-                UpdateSearchList();
-            }
-        }
-
-        private void remove_label_Button_Click(object sender, RoutedEventArgs e)
-        {
-            var lbl = label_list.SelectedItem as TriStateToggle;
-
-            if (lbl != null && MessageBox.Show(Window.GetWindow(this), "Are you sure you want to remove label: " + lbl.Name, "Delete", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
-            {
-                DataClient.Label.Remove(lbl.Id);
-                UpdateSearchList();
-            }
-        }
-
 
         private void Delete_Files_OnClick(object sender, RoutedEventArgs e)
         {
@@ -397,6 +293,11 @@ namespace SeriousOrganizerGui
             }
 
             return Enumerable.Empty<T>();
+        }
+
+        private void LabelPanel_StateChanged(object sender, EventArgs e)
+        {
+            UpdateSearchList();
         }
     }
 }

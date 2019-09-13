@@ -5,7 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SeriousOrganizerGui"
         xmlns:converter="clr-namespace:SeriousOrganizerGui.Converters"
-        mc:Ignorable="d">
+             xmlns:controls="clr-namespace:SeriousOrganizerGui.Controls"
+             mc:Ignorable="d">
 
     <Grid>
         <Grid.ColumnDefinitions>
@@ -23,30 +24,8 @@
         </StackPanel>
 
         <!-- Label list -->
-        <StackPanel Grid.Row="1" Grid.Column="0" Grid.RowSpan="2" Margin="10" Orientation="Vertical" VerticalAlignment="Stretch">
-            <ListView Name="label_list" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" >
-                <ListView.View>
-                    <GridView>
-                        <GridViewColumn Header="Name" Width="150"  DisplayMemberBinding="{Binding Name}" />
-                        <GridViewColumn Header="State" Width="50"  DisplayMemberBinding="{Binding State}" />
-                    </GridView>
-                </ListView.View>
-                <ListView.ItemContainerStyle>
-                    <Style TargetType="ListViewItem">
-                        <EventSetter Event="PreviewMouseLeftButtonDown" Handler="Label_list_PreviewMouseLeftButtonDown" />
-                        <EventSetter Event="PreviewMouseRightButtonDown" Handler="Label_list_PreviewMouseRightButtonDown" />
-                    </Style>
-                </ListView.ItemContainerStyle>
-            </ListView>
-
-
-
-            <StackPanel Orientation="Horizontal" >
-                <Button Content="Add Label" Click="add_label_Button_Click" Margin="5"/>
-                <Button Content="Remove" Click="remove_label_Button_Click" Margin="5"/>
-            </StackPanel>
-        </StackPanel>
-
+        <controls:LabelPanel StateChanged="LabelPanel_StateChanged" Grid.Row="1" Grid.Column="0" Grid.RowSpan="2" Margin="10"  VerticalAlignment="Stretch" ></controls:LabelPanel>
+        
         <!-- Search box -->
         <StackPanel Grid.Row="0" Grid.Column="1" Margin="10" Orientation="Horizontal" >
             <Label Content="Search" Margin="10"/>
