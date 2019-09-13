@@ -9,9 +9,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SeriousOrganizerGui
+namespace SeriousOrganizerGui.Extensions
 {
-    public static class Extensions
+    public static class PipeStreamExtensions
     {
         /// <summary>
         /// Reads a message from the pipe.

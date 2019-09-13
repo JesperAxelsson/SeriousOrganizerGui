@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.IO.Pipes;
 
 using SeriousOrganizerGui.Dto;
+using SeriousOrganizerGui.Extensions;
 
 namespace SeriousOrganizerGui
 {

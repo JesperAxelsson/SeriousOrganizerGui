@@ -1,6 +1,7 @@
 ﻿using SeriousOrganizerGui.Data;
 using SeriousOrganizerGui.Data.Providers;
 using SeriousOrganizerGui.Dto;
+using SeriousOrganizerGui.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -180,7 +181,7 @@ namespace SeriousOrganizerGui
 
         private void Delete_Files_OnClick(object sender, RoutedEventArgs e)
         {
-            var fileEntries = FindSelectedItems<FileEntry>(file_list);
+            var fileEntries = file_list.FindSelectedItems<FileEntry>();
             if (fileEntries.Count() == 0)
             {
                 MessageBox.Show($"No files selected", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -218,7 +219,7 @@ namespace SeriousOrganizerGui
 
         private void Delete_Entries_OnClick(object sender, RoutedEventArgs e)
         {
-            var dirIndexes = FindSelectedItems<Indexed>(dir_list);
+            var dirIndexes = dir_list.FindSelectedItems<Indexed>();
 
             var dirEntries = new List<DirEntry>();
             foreach (var ix in dirIndexes)
@@ -283,18 +284,7 @@ namespace SeriousOrganizerGui
 
         //    return (cm.PlacementTarget as ListViewItem)?.Content as T;
         //}
-
-        private static IEnumerable<T> FindSelectedItems<T>(ListView listView)
-            where T : class
-        {
-            if (listView.SelectedItems.Count > 0)
-            {
-                return listView.SelectedItems.Cast<T>();
-            }
-
-            return Enumerable.Empty<T>();
-        }
-
+        
         private void LabelPanel_StateChanged(object sender, EventArgs e)
         {
             UpdateSearchList();
