@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -131,17 +132,14 @@ namespace SeriousOrganizerGui
 
             var path = ((FileEntry)lv.SelectedItem).Path;
 
-            Process.Start(new ProcessStartInfo(path) { CreateNoWindow = true, UseShellExecute = true });
-        }
-
-        private void MoreInfo(object sender, RoutedEventArgs e)
-        {
-            var lv = sender as ListView;
-            if (lv.SelectedIndex < 0) return;
-
-            var path = ((FileEntry)lv.SelectedItem).Path;
-
-            Process.Start(new ProcessStartInfo(path) { CreateNoWindow = true });
+            if (File.Exists(path) || Directory.Exists(path))
+            {
+                Process.Start(new ProcessStartInfo(path) { CreateNoWindow = true, UseShellExecute = true });
+            }
+            else
+            {
+                MessageBox.Show("Failed to find file or folder.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private void menuItem_CopyUsername_Click(object sender, RoutedEventArgs e)
@@ -296,6 +294,98 @@ namespace SeriousOrganizerGui
                 DataClient.Label.Remove(lbl.Id);
                 UpdateSearchList();
             }
+        }
+
+
+        private void Delete_OnClick(object sender, RoutedEventArgs e)
+        {
+            var fileEntries = FindSelectedItems<FileEntry>(sender);
+            if (fileEntries.Count() == 0)
+            {
+                MessageBox.Show($"No files selected", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            if (fileEntries.Count() == 1)
+            {
+                var fileEntry = fileEntries.First();
+                if (MessageBox.Show($"Are you sure you want to remove {fileEntry.Path}?", $"Remove file {fileEntry.Name}", MessageBoxButton.OKCancel, MessageBoxImage.Warning) == MessageBoxResult.OK)
+                {
+                    try
+                    {
+                        File.Delete(fileEntry.Path);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Failed to delete file {fileEntry.Path} \n Error: {ex.ToString()}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                }
+            }
+            else
+            {
+                if (MessageBox.Show($"Are you sure you want to remove {fileEntries.Count()} files?", $"Remove files", MessageBoxButton.OKCancel, MessageBoxImage.Warning) == MessageBoxResult.OK)
+                {
+                    foreach (var entry in fileEntries)
+                    {
+                        try
+                        {
+
+                            File.Delete(entry.Path);
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show($"Failed to delete file {entry.Path} \n Error: {ex.ToString()}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                        }
+                    }
+                }
+            }
+        }
+
+        //private static T FindClickedItem<T>(object sender)
+        //    where T : class
+        //{
+        //    var mi = sender as MenuItem;
+        //    if (mi == null)
+        //    {
+        //        return null;
+        //    }
+
+        //    var cm = mi.CommandParameter as ContextMenu;
+        //    if (cm == null)
+        //    {
+        //        return null;
+        //    }
+
+        //    return (cm.PlacementTarget as ListViewItem)?.Content as T;
+        //}
+
+        private static IEnumerable<T> FindSelectedItems<T>(object sender)
+           where T : class
+        {
+            var mi = sender as MenuItem;
+            if (mi == null) return null;
+
+            var parent = mi.Parent as ContextMenu;
+            if (parent == null) return null;
+
+            //var cm = mi.CommandParameter as ContextMenu;
+            //if (cm == null) return null;
+
+            var container = parent.PlacementTarget as ListView;
+            if (container == null) return null;
+
+            return FindSelectedItems<T>(container);
+        }
+
+        private static IEnumerable<T> FindSelectedItems<T>(ListView listView)
+            where T : class
+        {
+            if (listView.SelectedItems.Count > 0)
+            {
+                return listView.SelectedItems.Cast<T>();
+            }
+
+            return Enumerable.Empty<T>();
         }
     }
 }
