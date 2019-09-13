@@ -62,6 +62,27 @@
                   ItemsSource="{Binding _turbo,Mode=OneWay}"
                   SelectionChanged="dir_list_SelectionChanged"
                   GridViewColumnHeader.Click="GridViewColumnHeaderClickedHandler">
+
+            <ListView.Resources>
+                <ContextMenu x:Key="ItemContextMenu">
+                    <!--<MenuItem Header="View"
+                      Click="View_OnClick"
+                      CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=Parent}"/>
+                    <MenuItem Header="Edit"
+                      Click="Edit_OnClick"
+                      CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=Parent}" />-->
+                    <MenuItem Header="Delete"
+                      Click="Delete_Entries_OnClick" CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=Parent}"
+                          />
+                </ContextMenu>
+            </ListView.Resources>
+
+            <ListView.ItemContainerStyle>
+                <Style TargetType="{x:Type ListViewItem}">
+                    <Setter Property="ContextMenu" Value="{StaticResource ItemContextMenu}" />
+                </Style>
+            </ListView.ItemContainerStyle>
+            
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="Name" Width="200" DisplayMemberBinding="{Binding Name}" />
@@ -79,28 +100,8 @@
                   VirtualizingPanel.CacheLength="10"
                   MouseDoubleClick="file_list_MouseDoubleClick">
 
-            <!--<ListView.Resources>
-                --><!--<ContextMenu x:Key="ItemContextMenu">
-                    <MenuItem x:Name="menuItem_CopyUsername"
-                              Click="menuItem_CopyUsername_Click"
-                              Header="Copy Username">
-                    </MenuItem>
-                </ContextMenu>--><!--
+            <ListView.Resources>
                 <ContextMenu x:Key="ItemContextMenu">
-                    --><!--<MenuItem Header="View"
-                      Click="View_OnClick"
-                      CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=Parent}"/>
-                    <MenuItem Header="Edit"
-                      Click="Edit_OnClick"
-                      CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=Parent}" />--><!--
-                    <MenuItem Header="Delete"
-                      Click="Delete_OnClick"
-                          />
-                </ContextMenu>
-            </ListView.Resources>-->
-
-            <ListView.ContextMenu>
-                <ContextMenu>
                     <!--<MenuItem Header="View"
                       Click="View_OnClick"
                       CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=Parent}"/>
@@ -108,17 +109,16 @@
                       Click="Edit_OnClick"
                       CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=Parent}" />-->
                     <MenuItem Header="Delete"
-                      Click="Delete_OnClick"
+                      Click="Delete_Files_OnClick" CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=Parent}"
                           />
                 </ContextMenu>
-            </ListView.ContextMenu>
-            
-            <!--<ListView.ItemContainerStyle>
+            </ListView.Resources>
+
+            <ListView.ItemContainerStyle>
                 <Style TargetType="{x:Type ListViewItem}">
                     <Setter Property="ContextMenu" Value="{StaticResource ItemContextMenu}" />
                 </Style>
-
-            </ListView.ItemContainerStyle>-->
+            </ListView.ItemContainerStyle>
 
             <ListView.View>
 

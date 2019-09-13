@@ -142,24 +142,6 @@ namespace SeriousOrganizerGui
             }
         }
 
-        private void menuItem_CopyUsername_Click(object sender, RoutedEventArgs e)
-        {
-            var items1 = file_list.SelectedItems;
-            var items = file_list.SelectedItems.Cast<FileEntry>().Select(o => o.Path).ToList();
-            var count = items.LongCount();
-            //if (items.Count == 0)
-            //{
-            //    MessageBox.Show("No items selected");
-            //    return;
-            //}
-
-            //if (MessageBox.Show($"Are you sure you want to delete {items.Count} items?", "Delete confirmation") == MessageBoxResult.Cancel)
-            //    return; // Skip deleting
-
-            //foreach (var path in items.)
-            //    File.Delete()
-
-        }
 
         GridViewColumnHeader _lastHeaderClicked = null;
         SortOrder _lastDirection = SortOrder.Asc;
@@ -218,6 +200,9 @@ namespace SeriousOrganizerGui
                                 LoadPanel.Visibility = Visibility.Collapsed;
                                 dir_list.Visibility = Visibility.Visible;
                                 file_list.Visibility = Visibility.Visible;
+
+                                UpdateSearchList();
+
                             }, System.Threading.CancellationToken.None, TaskContinuationOptions.None, TaskScheduler.FromCurrentSynchronizationContext());
         }
 
@@ -297,46 +282,86 @@ namespace SeriousOrganizerGui
         }
 
 
-        private void Delete_OnClick(object sender, RoutedEventArgs e)
+        private void Delete_Files_OnClick(object sender, RoutedEventArgs e)
         {
-            var fileEntries = FindSelectedItems<FileEntry>(sender);
+            var fileEntries = FindSelectedItems<FileEntry>(file_list);
             if (fileEntries.Count() == 0)
             {
                 MessageBox.Show($"No files selected", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
+            MessageBoxResult messageResult;
+
             if (fileEntries.Count() == 1)
             {
                 var fileEntry = fileEntries.First();
-                if (MessageBox.Show($"Are you sure you want to remove {fileEntry.Path}?", $"Remove file {fileEntry.Name}", MessageBoxButton.OKCancel, MessageBoxImage.Warning) == MessageBoxResult.OK)
-                {
-                    try
-                    {
-                        File.Delete(fileEntry.Path);
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show($"Failed to delete file {fileEntry.Path} \n Error: {ex.ToString()}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                    }
-                }
+                messageResult = MessageBox.Show($"Are you sure you want to remove {fileEntry.Path}?", $"Remove file {fileEntry.Name}", MessageBoxButton.OKCancel, MessageBoxImage.Warning);
             }
             else
             {
-                if (MessageBox.Show($"Are you sure you want to remove {fileEntries.Count()} files?", $"Remove files", MessageBoxButton.OKCancel, MessageBoxImage.Warning) == MessageBoxResult.OK)
-                {
-                    foreach (var entry in fileEntries)
-                    {
-                        try
-                        {
+                messageResult = MessageBox.Show($"Are you sure you want to remove {fileEntries.Count()} files?", $"Remove files", MessageBoxButton.OKCancel, MessageBoxImage.Warning);
+            }
 
-                            File.Delete(entry.Path);
-                        }
-                        catch (Exception ex)
-                        {
-                            MessageBox.Show($"Failed to delete file {entry.Path} \n Error: {ex.ToString()}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                        }
-                    }
+            if (messageResult != MessageBoxResult.OK)
+                return;
+
+            // Remove files
+            foreach (var entry in fileEntries)
+            {
+                try
+                {
+                    File.Delete(entry.Path);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Failed to delete file {entry.Path} \n Error: {ex.ToString()}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+        }
+
+        private void Delete_Entries_OnClick(object sender, RoutedEventArgs e)
+        {
+            var dirIndexes = FindSelectedItems<Indexed>(dir_list);
+
+            var dirEntries = new List<DirEntry>();
+            foreach (var ix in dirIndexes)
+            {
+                dirEntries.Add(_dirEntryProvider.GetItem(ix.Index));
+            }
+
+
+            if (dirEntries.Count() == 0)
+            {
+                MessageBox.Show($"No entries selected", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            MessageBoxResult messageResult;
+
+            if (dirEntries.Count() == 1)
+            {
+                var dirEntry = dirEntries.First();
+                messageResult = MessageBox.Show($"Are you sure you want to remove {dirEntry.Path}?", $"Remove entry {dirEntry.Name}", MessageBoxButton.OKCancel, MessageBoxImage.Warning);
+            }
+            else
+            {
+                messageResult = MessageBox.Show($"Are you sure you want to remove {dirEntries.Count()} entries?", $"Remove entries", MessageBoxButton.OKCancel, MessageBoxImage.Warning);
+            }
+
+            if (messageResult != MessageBoxResult.OK)
+                return;
+
+            // Remove the entries
+            foreach (var entry in dirEntries)
+            {
+                try
+                {
+                    Directory.Delete(entry.Path, true);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Failed to delete file {entry.Path} \n Error: {ex.ToString()}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
         }
@@ -358,24 +383,6 @@ namespace SeriousOrganizerGui
 
         //    return (cm.PlacementTarget as ListViewItem)?.Content as T;
         //}
-
-        private static IEnumerable<T> FindSelectedItems<T>(object sender)
-           where T : class
-        {
-            var mi = sender as MenuItem;
-            if (mi == null) return null;
-
-            var parent = mi.Parent as ContextMenu;
-            if (parent == null) return null;
-
-            //var cm = mi.CommandParameter as ContextMenu;
-            //if (cm == null) return null;
-
-            var container = parent.PlacementTarget as ListView;
-            if (container == null) return null;
-
-            return FindSelectedItems<T>(container);
-        }
 
         private static IEnumerable<T> FindSelectedItems<T>(ListView listView)
             where T : class
