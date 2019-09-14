@@ -37,43 +37,10 @@
         </StackPanel>
 
         <!-- Entry List -->
-        <ListView Grid.Row="1" Grid.Column="1" Margin="10" Name="dir_list" VirtualizingPanel.VirtualizationMode="Recycling" VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.CacheLength="10" 
-                  ItemsSource="{Binding _turbo,Mode=OneWay}"
-                  SelectionChanged="dir_list_SelectionChanged"
-                  GridViewColumnHeader.Click="GridViewColumnHeaderClickedHandler">
-
-            <ListView.Resources>
-                <ContextMenu x:Key="ItemContextMenu">
-                    <!--<MenuItem Header="View"
-                      Click="View_OnClick"
-                      CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=Parent}"/>
-                    <MenuItem Header="Edit"
-                      Click="Edit_OnClick"
-                      CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=Parent}" />-->
-                    <MenuItem Header="Delete"
-                      Click="Delete_Entries_OnClick" CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=Parent}"
-                          />
-                </ContextMenu>
-            </ListView.Resources>
-
-            <ListView.ItemContainerStyle>
-                <Style TargetType="{x:Type ListViewItem}">
-                    <Setter Property="ContextMenu" Value="{StaticResource ItemContextMenu}" />
-                </Style>
-            </ListView.ItemContainerStyle>
-
-            <ListView.View>
-                <GridView>
-                    <GridViewColumn Header="Name" Width="200" DisplayMemberBinding="{Binding Name}" />
-                    <GridViewColumn Header="Path" Width="200" DisplayMemberBinding="{Binding Path}"/>
-                    <GridViewColumn Header="Size" Width="100" DisplayMemberBinding="{Binding Size, Converter={converter:SizeToStringConverter}}"/>
-                </GridView>
-            </ListView.View>
-        </ListView>
+        <controls:EntryListView Grid.Row="1" Grid.Column="1" Margin="10" x:Name="dir_list"  SelectedIndexChanged="Dir_list_SelectedIndexChanged"/>
 
         <!-- File List -->
-        <controls:FileListView Grid.Row="2" Grid.Column="1" Margin="10" 
-                  x:Name="file_list">
-        </controls:FileListView>
+        <controls:FileListView Grid.Row="2" Grid.Column="1" Margin="10" x:Name="file_list" />
+
     </Grid>
 </UserControl>

@@ -1,4 +1,6 @@
-﻿using SeriousOrganizerGui.Dto;
+﻿using SeriousOrganizerGui.Data;
+using SeriousOrganizerGui.Data.Providers;
+using SeriousOrganizerGui.Dto;
 using SeriousOrganizerGui.Extensions;
 using System;
 using System.Collections;
@@ -25,24 +27,29 @@ namespace SeriousOrganizerGui.Controls
     public partial class FileListView : UserControl
     {
 
-        public static readonly DependencyProperty ItemsSourceProperty = DependencyProperty.Register("ItemsSource", typeof(IEnumerable), typeof(FileListView), new UIPropertyMetadata());
-
-        public IEnumerable ItemsSource
-        {
-            get
-            {
-                return (IEnumerable)GetValue(ItemsSourceProperty);
-            }
-            set
-            {
-                SetValue(ItemsSourceProperty, value);
-                file_list.ItemsSource = value;
-            }
-        }
-
         public FileListView()
         {
             InitializeComponent();
+        }
+
+        public void SetSelectedEntry(int entryIndex)
+        {
+            var currentProvider = file_list.ItemsSource as ItemProviderTurbo<FileEntry>;
+            Console.WriteLine("Selected row: " + entryIndex);
+
+            if (currentProvider is null)
+            {
+                var provider = new FileEntryProvider(DataClient.Client, entryIndex);
+                var foo = new ItemProviderTurbo<FileEntry>(provider);
+                foo.Update();
+                file_list.ItemsSource = foo;
+            }
+            else
+            {
+                (currentProvider.Provider as FileEntryProvider).SetDirIndex(entryIndex);
+                currentProvider.Update();
+                Reset();
+            }
         }
 
         public void Reset()
