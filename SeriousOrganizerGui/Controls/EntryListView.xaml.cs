@@ -17,6 +17,7 @@ using SeriousOrganizerGui.Extensions;
 using System.Linq;
 using System.IO;
 using SeriousOrganizerGui.Data.Providers;
+using System.Diagnostics;
 
 namespace SeriousOrganizerGui.Controls
 {
@@ -37,7 +38,7 @@ namespace SeriousOrganizerGui.Controls
     public partial class EntryListView : UserControl
     {
         public event EventHandler SelectedIndexChanged;
-        
+
         private void SendSelectedIndexChanged(int newIndex)
         {
             SelectedIndexChanged?.Invoke(this, new SelectedIndexChangedEventArgs(newIndex));
@@ -63,7 +64,7 @@ namespace SeriousOrganizerGui.Controls
         }
 
         public IEnumerable<T> FindSelectedItems<T>()
-            where T: class
+            where T : class
         {
             return dir_list.FindSelectedItems<T>();
         }
@@ -116,13 +117,7 @@ namespace SeriousOrganizerGui.Controls
         private void Delete_Entries_OnClick(object sender, RoutedEventArgs e)
         {
             var dirIndexes = dir_list.FindSelectedItems<Indexed>();
-
-            var dirEntries = new List<DirEntry>();
-            foreach (var ix in dirIndexes)
-            {
-                dirEntries.Add(_dirEntryProvider.GetItem(ix.Index));
-            }
-
+            var dirEntries = dirIndexes.Select(i => _dirEntryProvider.GetItem(i.Index)).ToList();
 
             if (dirEntries.Count() == 0)
             {
@@ -146,21 +141,17 @@ namespace SeriousOrganizerGui.Controls
                 return;
 
             // Remove the entries
-            foreach (var entry in dirEntries)
-            {
-                try
-                {
-                    if (File.Exists(entry.Path))
-                        File.Delete(entry.Path);
+            Util.DeletePath(dirEntries.Select(de => de.Path));
+        }
 
-                    if (Directory.Exists(entry.Path))
-                        Directory.Delete(entry.Path, true);
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show($"Failed to delete file {entry.Path} \n Error: {ex.ToString()}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                }
-            }
+        private void OpenInExplorer_OnClick(object sender, RoutedEventArgs e)
+        {
+            var clickedItem = Util.FindClickedItem<Indexed>(sender as MenuItem);
+            if (clickedItem == null) return;
+
+            var path = _dirEntryProvider.GetItem(clickedItem.Index).Path;
+
+            Util.StartProcess(path);
         }
 
     }

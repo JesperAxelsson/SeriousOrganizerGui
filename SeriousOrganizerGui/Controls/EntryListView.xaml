@@ -7,7 +7,7 @@
              xmlns:converter="clr-namespace:SeriousOrganizerGui.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    
+
     <ListView Name="dir_list" VirtualizingPanel.VirtualizationMode="Recycling" VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.CacheLength="10" 
                   ItemsSource="{Binding _turbo,Mode=OneWay}"
                   SelectionChanged="dir_list_SelectionChanged"
@@ -22,8 +22,10 @@
                       Click="Edit_OnClick"
                       CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=Parent}" />-->
                 <MenuItem Header="Delete"
-                      Click="Delete_Entries_OnClick" CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=Parent}"
-                          />
+                      Click="Delete_Entries_OnClick" CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=Parent}" />
+                <MenuItem Header="Show in explorer"
+                      Click="OpenInExplorer_OnClick"
+                      CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=Parent}" />
             </ContextMenu>
         </ListView.Resources>
 

@@ -64,14 +64,7 @@ namespace SeriousOrganizerGui.Controls
 
             var path = ((FileEntry)lv.SelectedItem).Path;
 
-            if (File.Exists(path) || Directory.Exists(path))
-            {
-                Process.Start(new ProcessStartInfo(path) { CreateNoWindow = true, UseShellExecute = true });
-            }
-            else
-            {
-                MessageBox.Show("Failed to find file or folder.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
+            Util.StartProcess(path);
         }
 
         private void Delete_Files_OnClick(object sender, RoutedEventArgs e)
@@ -99,17 +92,8 @@ namespace SeriousOrganizerGui.Controls
                 return;
 
             // Remove files
-            foreach (var entry in fileEntries)
-            {
-                try
-                {
-                    File.Delete(entry.Path);
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show($"Failed to delete file {entry.Path} \n Error: {ex.ToString()}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                }
-            }
+            Util.DeletePath(fileEntries.Select(fe => fe.Path));
+
         }
     }
 }
