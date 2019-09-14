@@ -25,7 +25,7 @@
 
         <!-- Label list -->
         <controls:LabelPanel StateChanged="LabelPanel_StateChanged" Grid.Row="1" Grid.Column="0" Grid.RowSpan="2" Margin="10"  VerticalAlignment="Stretch" ></controls:LabelPanel>
-        
+
         <!-- Search box -->
         <StackPanel Grid.Row="0" Grid.Column="1" Margin="10" Orientation="Horizontal" >
             <Label Content="Search" Margin="10"/>
@@ -61,7 +61,7 @@
                     <Setter Property="ContextMenu" Value="{StaticResource ItemContextMenu}" />
                 </Style>
             </ListView.ItemContainerStyle>
-            
+
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="Name" Width="200" DisplayMemberBinding="{Binding Name}" />
@@ -72,48 +72,8 @@
         </ListView>
 
         <!-- File List -->
-        <ListView Grid.Row="2" Grid.Column="1" Margin="10" 
-                  Name="file_list" 
-                  VirtualizingPanel.VirtualizationMode="Recycling" 
-                  VirtualizingPanel.IsVirtualizing="True" 
-                  VirtualizingPanel.CacheLength="10"
-                  MouseDoubleClick="file_list_MouseDoubleClick">
-
-            <ListView.Resources>
-                <ContextMenu x:Key="ItemContextMenu">
-                    <!--<MenuItem Header="View"
-                      Click="View_OnClick"
-                      CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=Parent}"/>
-                    <MenuItem Header="Edit"
-                      Click="Edit_OnClick"
-                      CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=Parent}" />-->
-                    <MenuItem Header="Delete"
-                      Click="Delete_Files_OnClick" CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=Parent}"
-                          />
-                </ContextMenu>
-            </ListView.Resources>
-
-            <ListView.ItemContainerStyle>
-                <Style TargetType="{x:Type ListViewItem}">
-                    <Setter Property="ContextMenu" Value="{StaticResource ItemContextMenu}" />
-                </Style>
-            </ListView.ItemContainerStyle>
-
-            <ListView.View>
-
-                <GridView>
-                    <GridViewColumn Header="Name" Width="200">
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
-                                <TextBlock x:Name="Txt" Text="{Binding Name}"  Foreground="{Binding Name, Converter={converter:NameToBrushConverter}}" />
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
-
-                    <GridViewColumn Header="Path" Width="200"  DisplayMemberBinding="{Binding Path}"/>
-                    <GridViewColumn Header="Size" Width="Auto" DisplayMemberBinding="{Binding Size, Converter={converter:SizeToStringConverter}}"/>
-                </GridView>
-            </ListView.View>
-        </ListView>
+        <controls:FileListView Grid.Row="2" Grid.Column="1" Margin="10" 
+                  x:Name="file_list">
+        </controls:FileListView>
     </Grid>
 </UserControl>
