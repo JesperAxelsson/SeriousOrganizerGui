@@ -46,7 +46,7 @@ namespace SeriousOrganizerGui.Controls
             }
             else
             {
-                (currentProvider.Provider as FileEntryProvider).SetDirIndex(entryIndex);
+                (currentProvider.Provider as FileEntryProvider)?.SetDirIndex(entryIndex);
                 currentProvider.Update();
                 Reset();
             }
@@ -60,9 +60,10 @@ namespace SeriousOrganizerGui.Controls
         private void file_list_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             var lv = sender as ListView;
-            if (lv.SelectedIndex < 0) return;
+            if (lv?.SelectedIndex < 0) return;
 
-            var path = ((FileEntry)lv.SelectedItem).Path;
+            var path = ((FileEntry)lv!.SelectedItem).Path;
+            if (path == null) return;
 
             Util.StartProcess(path);
         }

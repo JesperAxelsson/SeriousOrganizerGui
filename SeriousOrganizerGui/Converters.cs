@@ -25,7 +25,7 @@ namespace SeriousOrganizerGui.Converters
         const UInt64 MB = KB * KB;
         const UInt64 GB = KB * KB * KB;
 
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        public object? Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value is null) return null;
             var size = (UInt64)value;
@@ -45,13 +45,14 @@ namespace SeriousOrganizerGui.Converters
 
     public class NameToBrushConverter : BaseConverter, IValueConverter
     {
-        static readonly string[] MovieExtentions = { ".mp4", ".wmv", ".m4v", ".avi", ".mkv" };
+        static readonly string[] MovieExtentions = { ".mp4", ".wmv", ".m4v", ".avi", ".mkv", ".flv" };
 
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
-            string input = (value as string).TrimEnd();
+            string? input = (value as string)?.TrimEnd();
+            if (input == null) return DependencyProperty.UnsetValue;
 
-            if (MovieExtentions.Any(me => input.EndsWith(me, StringComparison.Ordinal)))
+            if (MovieExtentions.Any(me => input.ToLowerInvariant().EndsWith(me, StringComparison.Ordinal)))
                 return Brushes.Blue;
 
             return DependencyProperty.UnsetValue;

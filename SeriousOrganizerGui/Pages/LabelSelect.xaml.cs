@@ -21,7 +21,7 @@ namespace SeriousOrganizerGui
     /// </summary>
     public partial class LabelSelect : Window
     {
-        private List<Indexed> _entries;
+        private List<Indexed>? _entries;
         protected LabelSelect()
         {
             InitializeComponent();
@@ -57,7 +57,7 @@ namespace SeriousOrganizerGui
             if (LabelList.SelectedItems.Count > 0)
             {
                 var selected = LabelList.SelectedItems.Cast<Dto.Label>().Select(x => x.Id);
-                var entryIds = _entries.Select(ix => DataClient.Client.GetDir(ix.Index).Id);
+                var entryIds = _entries!.Select(ix => DataClient.Client.GetDir(ix.Index).Id);
                 DataClient.Label.AddLabelsToEntry(entryIds, selected);
 
                 this.Close();

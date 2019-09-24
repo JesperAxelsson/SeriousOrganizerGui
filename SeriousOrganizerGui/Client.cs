@@ -13,16 +13,20 @@ namespace SeriousOrganizerGui
 {
     public class Client : IDisposable
     {
-        private NamedPipeClientStream _client;
+        private NamedPipeClientStream _client = new NamedPipeClientStream(".", "dude", direction: PipeDirection.InOut);
         public void Connect()
         {
-            _client = new NamedPipeClientStream(".", "dude", direction: PipeDirection.InOut);
+            try { 
+            //_client = new NamedPipeClientStream(".", "dude", direction: PipeDirection.InOut);
             _client.Connect();
             _client.ReadMode = PipeTransmissionMode.Byte;
             Console.WriteLine("Up and running!");
+
+            }
+            catch (Exception ex) { var s = ex.ToString(); }
         }
 
-        public void SendReloadRequest(Action doneCallback = null)
+        public void SendReloadRequest(Action? doneCallback = null)
         {
             _client.SendRequest(RequestType.CreateReloadRequest());
             var resp = _client.WaitResponseU32();

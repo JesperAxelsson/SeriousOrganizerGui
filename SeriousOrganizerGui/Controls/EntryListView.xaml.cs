@@ -37,14 +37,14 @@ namespace SeriousOrganizerGui.Controls
     /// </summary>
     public partial class EntryListView : UserControl
     {
-        public event EventHandler SelectedIndexChanged;
+        public event EventHandler? SelectedIndexChanged;
 
         private void SendSelectedIndexChanged(int newIndex)
         {
             SelectedIndexChanged?.Invoke(this, new SelectedIndexChangedEventArgs(newIndex));
         }
 
-        private ItemProviderTurbo<DirEntry> _turbo;
+        private ItemProviderTurbo<DirEntry>? _turbo;
 
         private DirEntryProvider _dirEntryProvider;
 
@@ -60,7 +60,7 @@ namespace SeriousOrganizerGui.Controls
 
         public void Refresh()
         {
-            _turbo.Update();
+            _turbo!.Update();
         }
 
         public IEnumerable<T> FindSelectedItems<T>()
@@ -69,49 +69,49 @@ namespace SeriousOrganizerGui.Controls
             return dir_list.FindSelectedItems<T>();
         }
 
-        GridViewColumnHeader _lastHeaderClicked = null;
+        GridViewColumnHeader? _lastHeaderClicked = null;
         SortOrder _lastDirection = SortOrder.Asc;
         void GridViewColumnHeaderClickedHandler(object sender, RoutedEventArgs e)
         {
-            GridViewColumnHeader headerClicked = e.OriginalSource as GridViewColumnHeader;
+            GridViewColumnHeader? headerClicked = e.OriginalSource as GridViewColumnHeader;
             SortOrder direction;
 
-            if (headerClicked != null)
+            if (headerClicked == null) return;
+
+            if (headerClicked.Role != GridViewColumnHeaderRole.Padding)
             {
-                if (headerClicked.Role != GridViewColumnHeaderRole.Padding)
+                if (headerClicked != _lastHeaderClicked)
                 {
-                    if (headerClicked != _lastHeaderClicked)
+                    direction = SortOrder.Asc;
+                }
+                else
+                {
+                    if (_lastDirection == SortOrder.Asc)
                     {
-                        direction = SortOrder.Asc;
+                        direction = SortOrder.Desc;
                     }
                     else
                     {
-                        if (_lastDirection == SortOrder.Asc)
-                        {
-                            direction = SortOrder.Desc;
-                        }
-                        else
-                        {
-                            direction = SortOrder.Asc;
-                        }
+                        direction = SortOrder.Asc;
                     }
-
-                    string header = headerClicked.Column.Header as string;
-                    DataClient.Client.SendSortOrder((SortColumn)Enum.Parse(typeof(SortColumn), header), direction);
-                    _turbo.Update();
-
-                    _lastHeaderClicked = headerClicked;
-                    _lastDirection = direction;
                 }
+
+                string? header = headerClicked.Column.Header as string;
+                if (header == null) return;
+                DataClient.Client.SendSortOrder((SortColumn)Enum.Parse(typeof(SortColumn), header), direction);
+                _turbo!.Update();
+
+                _lastHeaderClicked = headerClicked;
+                _lastDirection = direction;
             }
         }
 
         private void dir_list_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var lv = sender as ListView;
-            if (lv.SelectedIndex < 0) return;
+            if (lv?.SelectedIndex < 0) return;
 
-            SendSelectedIndexChanged(lv.SelectedIndex);
+            SendSelectedIndexChanged(lv!.SelectedIndex);
         }
 
         private void Delete_Entries_OnClick(object sender, RoutedEventArgs e)
@@ -141,7 +141,7 @@ namespace SeriousOrganizerGui.Controls
                 return;
 
             // Remove the entries
-            Util.DeletePath(dirEntries.Select(de => de.Path));
+            Util.DeletePath(dirEntries.Select(de => de!.Path));
         }
 
         private void OpenInExplorer_OnClick(object sender, RoutedEventArgs e)
@@ -150,6 +150,7 @@ namespace SeriousOrganizerGui.Controls
             if (clickedItem == null) return;
 
             var path = _dirEntryProvider.GetItem(clickedItem.Index).Path;
+            if (path == null) return;
 
             Util.StartProcess(path);
         }

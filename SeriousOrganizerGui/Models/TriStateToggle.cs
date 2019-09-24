@@ -19,7 +19,7 @@ namespace SeriousOrganizerGui.Models
         private Dto.Label _inner;
         private TriState _state;
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         public TriStateToggle(Dto.Label inner)
         {
@@ -40,6 +40,6 @@ namespace SeriousOrganizerGui.Models
         }
 
         public int Id { get => _inner.Id; }
-        public string Name { get => _inner.Name; }
+        public string Name { get => _inner!.Name; }
     }
 }

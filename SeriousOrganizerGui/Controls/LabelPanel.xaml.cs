@@ -15,7 +15,7 @@ using System.Windows.Shapes;
 
 namespace SeriousOrganizerGui.Controls
 {
- 
+
 
     /// <summary>
     /// Interaction logic for LabelPanel.xaml
@@ -23,7 +23,7 @@ namespace SeriousOrganizerGui.Controls
     public partial class LabelPanel : UserControl
     {
 
-        public event EventHandler StateChanged;
+        public event EventHandler? StateChanged;
 
         private Lens<Dto.Label, TriStateToggle> _labelLens;
 
@@ -37,25 +37,24 @@ namespace SeriousOrganizerGui.Controls
 
         private void Label_list_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            ListViewItem item = sender as ListViewItem;
-            if (item != null)
+            ListViewItem? item = sender as ListViewItem;
+            if (item == null) return;
+
+            var toggler = item.Content as TriStateToggle;
+
+            switch (toggler!.State)
             {
-                var toggler = item.Content as TriStateToggle;
-
-                switch (toggler.State)
-                {
-                    case TriState.Neutral:
-                        toggler.State = TriState.Selected;
-                        break;
-                    case TriState.Selected:
-                    case TriState.UnSelected:
-                        toggler.State = TriState.Neutral;
-                        break;
-                }
-
-                DataClient.Label.FilterLabel(toggler.Id, (byte)toggler.State);
-                LabelStateChanged();
+                case TriState.Neutral:
+                    toggler.State = TriState.Selected;
+                    break;
+                case TriState.Selected:
+                case TriState.UnSelected:
+                    toggler.State = TriState.Neutral;
+                    break;
             }
+
+            DataClient.Label.FilterLabel(toggler.Id, (byte)toggler.State);
+            LabelStateChanged();
         }
 
         private void LabelStateChanged()
@@ -68,12 +67,12 @@ namespace SeriousOrganizerGui.Controls
 
         private void Label_list_PreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
-            ListViewItem item = sender as ListViewItem;
+            ListViewItem? item = sender as ListViewItem;
             if (item != null)
             {
                 var toggler = item.Content as TriStateToggle;
 
-                switch (toggler.State)
+                switch (toggler!.State)
                 {
                     case TriState.Neutral:
                         toggler.State = TriState.UnSelected;

@@ -42,7 +42,7 @@ namespace SeriousOrganizerGui.Data
             return Index * 2147483647;
         }
 
-        public override bool Equals(Object obj)
+        public override bool Equals(Object? obj)
         {
             if (obj == null || !(obj is Indexed))
                 return false;
@@ -58,7 +58,7 @@ namespace SeriousOrganizerGui.Data
     public class ItemProviderTurbo<T> : IList<T>, IList, INotifyCollectionChanged
         where T : Indexed
     {
-        public event NotifyCollectionChangedEventHandler CollectionChanged;
+        public event NotifyCollectionChangedEventHandler? CollectionChanged;
 
         private IItemProvider<T> _provider;
         private LRUCache<int, T> _lruCache = new LRUCache<int, T>(200);
@@ -85,11 +85,13 @@ namespace SeriousOrganizerGui.Data
         }
 
         public T this[int index] { get => _lruCache.Get(index, k => _provider.GetItem(k)); set => throw new NotImplementedException(); }
-        object IList.this[int index] { get => this[index]; set => throw new NotImplementedException(); }
+        object? IList.this[int index] { get => this[index]; set => throw new NotImplementedException(); }
 
-        public int IndexOf(object value)
+        public int IndexOf(object? value)
         {
-            return (value as Indexed).Index;
+            var val = (value as Indexed);
+            if (val == null) return -1;
+            return val.Index;
         }
 
         public int Count { get; private set; }
@@ -99,7 +101,7 @@ namespace SeriousOrganizerGui.Data
         public object SyncRoot => new object();
         public bool IsSynchronized => false;
 
-        public bool Contains(object value)
+        public bool Contains(object? value)
         {
             return false;
         }
@@ -178,18 +180,18 @@ namespace SeriousOrganizerGui.Data
             throw new NotImplementedException();
         }
 
-        public int Add(object value)
+        public int Add(object? value)
         {
             throw new NotImplementedException();
         }
 
 
-        public void Insert(int index, object value)
+        public void Insert(int index, object? value)
         {
             throw new NotImplementedException();
         }
 
-        public void Remove(object value)
+        public void Remove(object? value)
         {
             throw new NotImplementedException();
         }

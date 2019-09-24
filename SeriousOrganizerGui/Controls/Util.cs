@@ -44,11 +44,11 @@ namespace SeriousOrganizerGui.Controls
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Failed to delete {path} \n Error: {ex.InnerException.ToString()}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Failed to delete {path} \n Error: {ex.InnerException?.ToString()}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
-        public static T FindClickedItem<T>(MenuItem sender)
+        public static T? FindClickedItem<T>(MenuItem? sender)
             where T : class
         {
             if (sender == null)

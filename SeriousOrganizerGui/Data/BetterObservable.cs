@@ -12,8 +12,8 @@ namespace SeriousOrganizerGui.Data
 {
     public class BetterObservable<T> : IList<T>, IEnumerable<T>, INotifyPropertyChanged, INotifyCollectionChanged
     {
-        public event PropertyChangedEventHandler PropertyChanged;
-        public event NotifyCollectionChangedEventHandler CollectionChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
+        public event NotifyCollectionChangedEventHandler? CollectionChanged;
         private List<T> _store;
 
         private void PropChanged(string propName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));

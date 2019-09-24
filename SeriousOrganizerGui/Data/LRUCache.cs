@@ -7,6 +7,8 @@ using System.Runtime.CompilerServices;
 namespace SeriousOrganizerGui.Data
 {
     public class LRUCache<K, V>
+        where K : notnull
+        where V : notnull
     {
 
         private class LRUCacheItem
@@ -32,8 +34,7 @@ namespace SeriousOrganizerGui.Data
         [MethodImpl(MethodImplOptions.Synchronized)]
         public V Get(K key, Func<K, V> create)
         {
-            LinkedListNode<LRUCacheItem> node;
-            if (!_cacheMap.TryGetValue(key, out node))
+            if (!_cacheMap.TryGetValue(key, out var node))
             {
                 V val = create(key);
                 Add(key, val);
@@ -76,11 +77,12 @@ namespace SeriousOrganizerGui.Data
         private void RemoveFirst()
         {
             // Remove from LRUPriority
-            LinkedListNode<LRUCacheItem> node = _lruList.First;
+            LinkedListNode<LRUCacheItem>? node = _lruList.First;
             _lruList.RemoveFirst();
 
             // Remove from cache
-            _cacheMap.Remove(node.Value.key);
+            if (node != null)
+                _cacheMap.Remove(node.Value.key);
         }
 
 
