@@ -151,9 +151,8 @@ namespace SeriousOrganizerGui.Controls
 
             var path = _dirEntryProvider.GetItem(clickedItem.Index).Path;
             if (path == null) return;
-
-            Util.StartProcess(path);
-        }
-
+            
+            Util.OpenPathInExplorer(path);
+        }      
     }
 }

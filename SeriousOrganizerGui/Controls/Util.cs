@@ -10,11 +10,32 @@ namespace SeriousOrganizerGui.Controls
 {
     public static class Util
     {
-        public static void StartProcess(string file)
+        public static void OpenPathInExplorer(string path)
         {
-            if (File.Exists(file) || Directory.Exists(file))
+            if (File.Exists(path) )
             {
-                var psi = new ProcessStartInfo(file) { CreateNoWindow = true, UseShellExecute = true };
+                var psi = new ProcessStartInfo("explorer") { CreateNoWindow = true, UseShellExecute = true };
+                psi.Arguments = "/select," + path;
+
+                Process.Start(psi);
+
+            }else if (Directory.Exists(path) ){
+
+                var psi = new ProcessStartInfo(path) { CreateNoWindow = true, UseShellExecute = true };
+
+                Process.Start(psi);
+            }
+            else
+            {
+                MessageBox.Show("Failed to find file or folder.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        public static void StartProcess(string command)
+        {
+            if (File.Exists(command) || Directory.Exists(command))
+            {
+                var psi = new ProcessStartInfo(command) { CreateNoWindow = true, UseShellExecute = true };
                 Process.Start(psi);
             }
             else
