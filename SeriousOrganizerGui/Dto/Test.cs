@@ -64,7 +64,7 @@ namespace SeriousOrganizerGui.Dto
 
         public static byte[] CreateDirRequest(int ix)
         {
-            return CreateIntRequest(DirRequest, ix) .ToArray();
+            return CreateIntRequest(DirRequest, ix).ToArray();
         }
 
         public static byte[] CreateDirFileCountRequest(int ix)
@@ -180,11 +180,13 @@ namespace SeriousOrganizerGui.Dto
         }
     }
 
+#nullable disable
+
     [MessagePackObject, ToString]
     public class TextSearch
     {
         [Key(0)]
-        public string? Text { get; set; }
+        public string Text { get; set; }
     }
 
     [MessagePackObject, ToString]
@@ -193,9 +195,9 @@ namespace SeriousOrganizerGui.Dto
         [Key(0)]
         public Int32 Id { get; set; }
         [Key(1)]
-        public string? Name { get; set; }
+        public string Name { get; set; }
         [Key(2)]
-        public string? Path { get; set; }
+        public string Path { get; set; }
         [Key(3)]
         public UInt64 Size { get; set; }
 
@@ -207,9 +209,9 @@ namespace SeriousOrganizerGui.Dto
     public class FileEntry : Indexed
     {
         [Key(0)]
-        public string? Name { get; set; }
+        public string Name { get; set; }
         [Key(1)]
-        public string? Path { get; set; }
+        public string Path { get; set; }
         [Key(2)]
         public UInt64 Size { get; set; }
 
@@ -230,7 +232,7 @@ namespace SeriousOrganizerGui.Dto
         [Key(0)]
         public int Id { get; set; }
         [Key(1)]
-        public string? Name { get; set; }
+        public string Name { get; set; }
     }
 
     [MessagePackObject, ToString]
@@ -239,10 +241,12 @@ namespace SeriousOrganizerGui.Dto
         [Key(0)]
         public int Id { get; set; }
         [Key(1)]
-        public string? Name { get; set; }
+        public string Name { get; set; }
         [Key(2)]
-        public string? Path { get; set; }
+        public string Path { get; set; }
         [Key(3)]
         public Int64 Size { get; set; }
     }
+
+#nullable restore
 }

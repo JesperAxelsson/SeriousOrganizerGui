@@ -40,6 +40,6 @@ namespace SeriousOrganizerGui.Models
         }
 
         public int Id { get => _inner.Id; }
-        public string Name { get => _inner!.Name; }
+        public string Name { get => _inner.Name; }
     }
 }
