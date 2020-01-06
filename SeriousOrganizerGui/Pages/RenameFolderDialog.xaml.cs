@@ -30,6 +30,7 @@ namespace SeriousOrganizerGui
 
             _dirEntry = dirEntry;
             txt_new_name.Text = dirEntry.Name;
+            txt_new_name.Focus();
         }
 
         private void BtnRename_Click(object sender, RoutedEventArgs e)
