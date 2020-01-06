@@ -36,6 +36,7 @@ namespace SeriousOrganizerGui
         public MainWindow()
         {
             DataClient.Connect();
+            DataClient.Update();
 
             InitializeComponent();
         }

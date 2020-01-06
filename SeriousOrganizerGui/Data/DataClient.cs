@@ -16,8 +16,8 @@ namespace SeriousOrganizerGui.Data
         private static bool _isConnected = false;
 
         public static Client Client => _client;
-        public static LabelHandler Label;
-        public static LocationHandler Location;
+        public static LabelHandler Label = new LabelHandler(_client);
+        public static LocationHandler Location = new LocationHandler(_client);
 
         public static void Connect()
         {
@@ -25,9 +25,14 @@ namespace SeriousOrganizerGui.Data
             {
                 _isConnected = true;
                 _client.Connect();
-                Label = new LabelHandler(_client);
-                Location= new LocationHandler(_client);
+
             }
+        }
+
+        public static void Update()
+        {
+            Label.Update();
+            Location.Update();
         }
     }
 
@@ -41,7 +46,6 @@ namespace SeriousOrganizerGui.Data
             public LabelHandler(Client client)
             {
                 _client = client;
-                Update();
             }
 
 
@@ -73,12 +77,12 @@ namespace SeriousOrganizerGui.Data
                 return _client.SendLabelsGetForEntry(id);
             }
 
-            public void AddLabelsToEntry(IEnumerable< int >entryIds, IEnumerable<int> labelIds)
+            public void AddLabelsToEntry(IEnumerable<int> entryIds, IEnumerable<int> labelIds)
             {
                 _client.SendAddLabelsToDir(entryIds, labelIds);
             }
 
-            public void FilterLabel(int id , byte state)
+            public void FilterLabel(int id, byte state)
             {
                 _client.FilterLabel(id, state);
             }
@@ -92,7 +96,6 @@ namespace SeriousOrganizerGui.Data
             public LocationHandler(Client client)
             {
                 _client = client;
-                Update();
             }
 
             private BetterObservable<Location> _locationList = new BetterObservable<Location>();
