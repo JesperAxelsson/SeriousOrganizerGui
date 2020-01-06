@@ -11,8 +11,8 @@
             <Label Content="New folder name" Margin="5"/>
             <TextBox Name="txt_new_name" VerticalAlignment="Center" Width="auto" Height="25" VerticalContentAlignment="Center" Margin="5"/>
             <StackPanel Orientation="Horizontal">
-                <Button Content="Ok" Margin="5" Click="BtnRename_Click"/>
-                <Button Content="Cancel" Margin="5" Click="BtnClose_Click" />
+                <Button Content="Ok" Margin="5" Width="40" Height="30" Click="BtnRename_Click"/>
+                <Button Content="Cancel" Margin="5" Width="40" Height="30" Click="BtnClose_Click" />
             </StackPanel>
         </StackPanel>
     </Grid>
