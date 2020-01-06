@@ -5,7 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SeriousOrganizerGui"
         mc:Ignorable="d"
-        Title="Rename folder" Height="150" Width="400">
+        Title="Rename folder" Height="150" Width="400" 
+         KeyDown="Window_KeyDown">
     <Grid>
         <StackPanel>
             <Label Content="New folder name" Margin="5"/>
