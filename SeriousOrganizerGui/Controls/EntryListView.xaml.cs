@@ -151,8 +151,22 @@ namespace SeriousOrganizerGui.Controls
 
             var path = _dirEntryProvider.GetItem(clickedItem.Index).Path;
             if (path == null) return;
-            
+
             Util.OpenPathInExplorer(path);
-        }      
+        }
+
+        private void RenameEntry_OnClick(object sender, RoutedEventArgs e)
+        {
+            var clickedItem = Util.FindClickedItem<Indexed>(sender as MenuItem);
+            if (clickedItem == null) return;
+
+            var entry = _dirEntryProvider.GetItem(clickedItem.Index);
+            if (entry == null) return;
+
+            var renameDialog = new RenameFolderDialog(entry);
+            renameDialog.ShowInTaskbar = false;
+            renameDialog.Owner = Window.GetWindow(this);
+            renameDialog.ShowDialog();
+        }
     }
 }

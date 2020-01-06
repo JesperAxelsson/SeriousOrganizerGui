@@ -26,6 +26,8 @@
                 <MenuItem Header="Show in explorer"
                       Click="OpenInExplorer_OnClick"
                       CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=Parent}" />
+                <MenuItem Header="Rename"
+                      Click="RenameEntry_OnClick" CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=Parent}" />
             </ContextMenu>
         </ListView.Resources>
 
