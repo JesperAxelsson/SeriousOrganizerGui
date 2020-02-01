@@ -29,7 +29,7 @@
     <PackageReference Include="Fody" Version="6.0.6">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="MessagePack" Version="2.0.323" />
+    <PackageReference Include="MessagePack" Version="2.1.80" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="ToString.Fody" Version="1.11.0" />
   </ItemGroup>
